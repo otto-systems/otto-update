@@ -8,13 +8,13 @@
   "releasePrep": "completed",
   "commit": {
     "status": "committed",
-    "hash": "92e864ee32b167b9b5aab3e18a583d46578d28ae",
-    "message": "chore(gitops): stabilize 0.2.0 dependency and typecheck sync"
+    "hash": "5936d85c38ee985d0a996c09706d8d4022d4f9da",
+    "message": "sync index reconciled to current HEAD"
   },
   "push": {
     "status": "pushed"
   },
-  "updatedAt": "2026-07-03T15:22:47.949Z",
+  "updatedAt": "2026-07-03T15:24:49.487Z",
   "releaseVersion": "0.2.0",
   "releaseMetadata": {
     "channel": "stable",
@@ -24,5 +24,11 @@
   "validation": {
     "typescriptNoEmit": "pass"
   },
-  "syncStage": "post_release_stabilization"
+  "syncStage": "post_release_stabilization",
+  "releaseTag": "v0.2.0",
+  "tags": {
+    "status": "pushed",
+    "name": "v0.2.0"
+  },
+  "releaseLedger": "manifests/gitops-release-ledger-0.2.0.json"
 }
