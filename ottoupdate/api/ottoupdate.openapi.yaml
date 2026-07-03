@@ -1,0 +1,589 @@
+openapi: 3.1.0
+info:
+  title: OttoUpdate Service API
+  version: 1.0.0
+  description: Internal HTTP API for the OttoUpdate Rust service
+servers:
+  - url: http://localhost:7430
+    description: Local OttoUpdate daemon endpoint
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Service health status
+      x-otto-safe: true
+      security: []
+      responses:
+        '200':
+          description: Service health snapshot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /v1/state:
+    get:
+      operationId: getState
+      summary: Current device and update state
+      x-otto-safe: true
+      responses:
+        '200':
+          description: Combined state payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateResponse'
+
+  /v1/check:
+    post:
+      operationId: triggerCheck
+      summary: Trigger an immediate update check
+      x-otto-mutating: true
+      responses:
+        '202':
+          description: Check request accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckTriggered'
+        '409':
+          description: Check already in progress
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlreadyChecking'
+
+  /v1/manifest:
+    get:
+      operationId: getManifest
+      summary: Current fetched release manifest
+      x-otto-safe: true
+      responses:
+        '200':
+          description: Active manifest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseManifest'
+        '404':
+          description: No manifest available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoManifest'
+
+  /v1/policy:
+    get:
+      operationId: getPolicyDecision
+      summary: Latest policy evaluation decision
+      x-otto-safe: true
+      responses:
+        '200':
+          description: Current policy decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDecision'
+
+  /v1/approve:
+    post:
+      operationId: approveUpdate
+      summary: Approve pending update request
+      x-otto-mutating: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveRequest'
+      responses:
+        '200':
+          description: Approval accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Approved'
+        '409':
+          description: No pending approval exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotPendingApproval'
+
+  /v1/defer:
+    post:
+      operationId: deferUpdate
+      summary: Defer pending update
+      x-otto-mutating: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeferRequest'
+      responses:
+        '200':
+          description: Deferral accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deferred'
+        '400':
+          description: Defer duration invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidDeferDuration'
+
+  /v1/progress:
+    get:
+      operationId: getDownloadProgress
+      summary: Active download progress
+      x-otto-safe: true
+      responses:
+        '200':
+          description: Download in progress
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadProgress'
+        '204':
+          description: No active download
+
+  /v1/history:
+    get:
+      operationId: getHistory
+      summary: Paginated update history
+      x-otto-safe: true
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 500
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: History page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+
+  /v1/config:
+    get:
+      operationId: getConfig
+      summary: Read current update configuration
+      x-otto-safe: true
+      responses:
+        '200':
+          description: Active configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateConfig'
+    put:
+      operationId: setConfig
+      summary: Merge and persist update configuration
+      x-otto-mutating: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConfigPatch'
+      responses:
+        '200':
+          description: Updated configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateConfig'
+
+  /v1/rollback:
+    post:
+      operationId: triggerRollback
+      summary: Trigger rollback to prior installation
+      x-otto-mutating: true
+      responses:
+        '202':
+          description: Rollback accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackTriggered'
+        '409':
+          description: No rollback candidate available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NothingToRollback'
+
+  /v1/backups:
+    get:
+      operationId: getBackups
+      summary: List installation backups
+      x-otto-safe: true
+      responses:
+        '200':
+          description: Available backups
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupListResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - version
+        - uptime_seconds
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, error]
+        version:
+          type: string
+        uptime_seconds:
+          type: integer
+          minimum: 0
+
+    StateResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - device_state
+        - update_state
+        - active_manifest
+      properties:
+        device_state:
+          $ref: '#/components/schemas/DeviceState'
+        update_state:
+          $ref: '#/components/schemas/UpdateState'
+        active_manifest:
+          oneOf:
+            - $ref: '#/components/schemas/ReleaseManifest'
+            - type: 'null'
+
+    CheckTriggered:
+      type: object
+      additionalProperties: false
+      required:
+        - check_id
+        - triggered_at
+      properties:
+        check_id:
+          type: string
+          format: uuid
+        triggered_at:
+          type: string
+          format: date-time
+
+    AlreadyChecking:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+          enum: [already_checking]
+
+    ReleaseManifest:
+      type: object
+      additionalProperties: true
+      description: Release manifest object as defined by shared schema.
+
+    NoManifest:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+          enum: [no_manifest]
+
+    PolicyDecision:
+      type: object
+      additionalProperties: false
+      required:
+        - decision
+      properties:
+        decision:
+          type: string
+          enum: [approve, defer, block, require_approval]
+        reason:
+          oneOf:
+            - type: string
+            - type: 'null'
+        until:
+          oneOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        group:
+          oneOf:
+            - type: string
+            - type: 'null'
+
+    ApproveRequest:
+      type: object
+      additionalProperties: false
+      required: [check_id]
+      properties:
+        check_id:
+          type: string
+          format: uuid
+
+    Approved:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [approved]
+
+    NotPendingApproval:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+          enum: [not_pending_approval]
+
+    DeferRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - check_id
+        - defer_seconds
+      properties:
+        check_id:
+          type: string
+          format: uuid
+        defer_seconds:
+          type: integer
+          minimum: 1
+
+    Deferred:
+      type: object
+      additionalProperties: false
+      required: [until]
+      properties:
+        until:
+          type: string
+          format: date-time
+
+    InvalidDeferDuration:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+          enum: [invalid_defer_duration]
+
+    DownloadProgress:
+      type: object
+      additionalProperties: false
+      required:
+        - bytes_received
+        - total_bytes
+        - speed_bps
+        - eta_seconds
+      properties:
+        bytes_received:
+          type: integer
+          minimum: 0
+        total_bytes:
+          type: integer
+          minimum: 0
+        speed_bps:
+          type: integer
+          minimum: 0
+        eta_seconds:
+          type: integer
+          minimum: 0
+
+    HistoryResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateHistoryItem'
+        total:
+          type: integer
+          minimum: 0
+
+    UpdateHistoryItem:
+      type: object
+      additionalProperties: false
+      required:
+        - event_id
+        - version
+        - outcome
+        - recorded_at
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        version:
+          type: string
+        outcome:
+          type: string
+          enum: [applied, deferred, blocked, failed, rolled_back]
+        recorded_at:
+          type: string
+          format: date-time
+        reason:
+          oneOf:
+            - type: string
+            - type: 'null'
+
+    UpdateConfig:
+      type: object
+      additionalProperties: false
+      required:
+        - check_interval_seconds
+        - allow_auto_apply
+        - max_defer_days
+      properties:
+        check_interval_seconds:
+          type: integer
+          minimum: 30
+        allow_auto_apply:
+          type: boolean
+        max_defer_days:
+          type: integer
+          minimum: 0
+          maximum: 90
+
+    UpdateConfigPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        check_interval_seconds:
+          oneOf:
+            - type: integer
+              minimum: 30
+            - type: 'null'
+        allow_auto_apply:
+          oneOf:
+            - type: boolean
+            - type: 'null'
+        max_defer_days:
+          oneOf:
+            - type: integer
+              minimum: 0
+              maximum: 90
+            - type: 'null'
+
+    RollbackTriggered:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [rollback_triggered]
+
+    NothingToRollback:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+          enum: [nothing_to_rollback]
+
+    UpdateState:
+      type: object
+      additionalProperties: false
+      required: [state]
+      properties:
+        state:
+          type: string
+          enum:
+            - idle
+            - checking
+            - manifest_fetched
+            - policy_evaluating
+            - approved
+            - deferred
+            - blocked
+            - downloading
+            - verifying
+            - ready_to_apply
+            - applying
+            - applied
+            - rolled_back
+            - failed
+
+    DeviceState:
+      type: object
+      additionalProperties: true
+      description: Device state object as defined by shared schema.
+
+    BackupRecord:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - version
+        - created_at
+        - path
+        - file_count
+        - sha256
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        path:
+          type: string
+        file_count:
+          type: integer
+          minimum: 0
+        sha256:
+          type: string
+
+    BackupListResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BackupRecord'

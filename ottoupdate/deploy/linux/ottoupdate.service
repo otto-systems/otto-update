@@ -1,0 +1,26 @@
+[Unit]
+Description=OttoUpdate Background Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/ottoupdate-server --config /etc/ottoupdate/config.toml
+Restart=on-failure
+RestartSec=10
+User=ottoupdate
+Group=ottoupdate
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+AmbientCapabilities=
+CapabilityBoundingSet=
+WorkingDirectory=/var/lib/ottoupdate
+StateDirectory=ottoupdate
+LogsDirectory=ottoupdate
+RuntimeDirectory=ottoupdate
+Environment=RUST_LOG=info
+
+[Install]
+WantedBy=multi-user.target

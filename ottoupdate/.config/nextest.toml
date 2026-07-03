@@ -1,0 +1,12 @@
+[profile.default]
+failure-output = "immediate-final"
+status-level = "skip"
+
+[profile.integration]
+inherits = "default"
+slow-timeout = { period = "120s", terminate-after = 2 }
+test-group = "integration"
+
+[[profile.integration.overrides]]
+filter = "test(full_cycle)"
+test-group = "integration"
