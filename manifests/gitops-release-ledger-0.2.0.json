@@ -54,5 +54,15 @@
   "validation": {
     "typescriptNoEmit": "pass",
     "repoSync": "pass"
-  }
+  },
+  "githubReleases": {
+    "otto-kernel": "https://github.com/otto-systems/otto-kernel/releases/tag/v0.2.0",
+    "otto-update": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.0",
+    "otto-command-service": "https://github.com/otto-systems/otto-command-service/releases/tag/v0.2.0",
+    "otto-ui": "https://github.com/otto-systems/otto-ui/releases/tag/v0.2.0",
+    "otto-extensions": "https://github.com/otto-systems/otto-extensions/releases/tag/v0.2.0",
+    "otto-protocol": "https://github.com/otto-systems/otto-protocol/releases/tag/v0.2.0",
+    "otto-server": "https://github.com/otto-systems/otto-server/releases/tag/v0.2.0"
+  },
+  "updatedAt": "2026-07-03T15:26:09.609Z"
 }
