@@ -7,43 +7,43 @@
     "otto-kernel": {
       "repo": "https://github.com/otto-systems/otto-kernel",
       "branch": "main",
-      "head": "8daf1b33f71525e30ceb9b284102de54a7427487",
+      "head": "c78e6046e9fd6df48c246be176b01b88b5adb7e9",
       "tag": "v0.2.1"
     },
     "otto-update": {
       "repo": "https://github.com/otto-systems/otto-update",
       "branch": "main",
-      "head": "5936d85c38ee985d0a996c09706d8d4022d4f9da",
+      "head": "42775ced980ee9ef4acef5b5a93d5154b4378c15",
       "tag": "v0.2.1"
     },
     "otto-command-service": {
       "repo": "https://github.com/otto-systems/otto-command-service",
       "branch": "main",
-      "head": "2887297625ded426a67658dfcf5bcfddae74d26f",
+      "head": "dab500533827df950009adc5f1a635f7067cf10f",
       "tag": "v0.2.1"
     },
     "otto-ui": {
       "repo": "https://github.com/otto-systems/otto-ui",
       "branch": "main",
-      "head": "c68501eabc7142d0c52822bc11bc3bcf15e195d6",
+      "head": "790593b876e213103d32d5929666e057c1ccbf50",
       "tag": "v0.2.1"
     },
     "otto-extensions": {
       "repo": "https://github.com/otto-systems/otto-extensions",
       "branch": "main",
-      "head": "dfa9e7ed7507f5283f2ddaac8ed7e894300ee4e8",
+      "head": "88f8fb2c6e975f5ea50134a29cc221348fe5e874",
       "tag": "v0.2.1"
     },
     "otto-protocol": {
       "repo": "https://github.com/otto-systems/otto-protocol",
       "branch": "main",
-      "head": "5663a557cb27c793e8982c7f6fbfee66d49f3b71",
+      "head": "4b2bf863aae68d12974a736b806cf26b2ffa3410",
       "tag": "v0.2.1"
     },
     "otto-server": {
       "repo": "https://github.com/otto-systems/otto-server",
       "branch": "main",
-      "head": "aad07778063bae4837638c9aa60f67fb5b007516",
+      "head": "bb10473ccb440decfc8b8be9f0ba2bd92a1b2f70",
       "tag": "v0.2.1"
     }
   },
@@ -64,5 +64,5 @@
     "otto-protocol": "https://github.com/otto-systems/otto-protocol/releases/tag/v0.2.1",
     "otto-server": "https://github.com/otto-systems/otto-server/releases/tag/v0.2.1"
   },
-  "updatedAt": "2026-07-03T15:54:38.261Z"
+  "updatedAt": "2026-07-03T16:00:14.258Z"
 }
