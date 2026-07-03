@@ -1,7 +1,7 @@
 {
   "repo": "otto-update",
   "syncedAt": "2026-07-03T15:18:09Z",
-  "targetVersion": "0.2.0",
+  "targetVersion": "0.2.1",
   "manifestConsistency": "validated",
   "schemaConsistency": "validated",
   "versionStatus": "aligned",
@@ -14,26 +14,26 @@
   "push": {
     "status": "pushed"
   },
-  "updatedAt": "2026-07-03T15:26:09.433Z",
-  "releaseVersion": "0.2.0",
+  "updatedAt": "2026-07-03T15:54:38.261Z",
+  "releaseVersion": "0.2.1",
   "releaseMetadata": {
     "channel": "stable",
-    "updateManifest": "manifests/release-0.2.0.json",
+    "updateManifest": "manifests/release-0.2.1.json",
     "latestManifest": "manifests/latest.json"
   },
   "validation": {
     "typescriptNoEmit": "pass"
   },
   "syncStage": "post_release_stabilization",
-  "releaseTag": "v0.2.0",
+  "releaseTag": "v0.2.1",
   "tags": {
     "status": "pushed",
-    "name": "v0.2.0"
+    "name": "v0.2.1"
   },
-  "releaseLedger": "manifests/gitops-release-ledger-0.2.0.json",
+  "releaseLedger": "manifests/gitops-release-ledger-0.2.1.json",
   "release": {
     "status": "published",
-    "tag": "v0.2.0",
-    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.0"
+    "tag": "v0.2.1",
+    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.1"
   }
 }

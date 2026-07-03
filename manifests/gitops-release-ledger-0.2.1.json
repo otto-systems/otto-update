@@ -1,0 +1,68 @@
+{
+  "releaseVersion": "0.2.1",
+  "releaseTag": "v0.2.1",
+  "releasedAt": "2026-07-03T15:54:38.261Z",
+  "channel": "stable",
+  "repos": {
+    "otto-kernel": {
+      "repo": "https://github.com/otto-systems/otto-kernel",
+      "branch": "main",
+      "head": "8daf1b33f71525e30ceb9b284102de54a7427487",
+      "tag": "v0.2.1"
+    },
+    "otto-update": {
+      "repo": "https://github.com/otto-systems/otto-update",
+      "branch": "main",
+      "head": "5936d85c38ee985d0a996c09706d8d4022d4f9da",
+      "tag": "v0.2.1"
+    },
+    "otto-command-service": {
+      "repo": "https://github.com/otto-systems/otto-command-service",
+      "branch": "main",
+      "head": "2887297625ded426a67658dfcf5bcfddae74d26f",
+      "tag": "v0.2.1"
+    },
+    "otto-ui": {
+      "repo": "https://github.com/otto-systems/otto-ui",
+      "branch": "main",
+      "head": "c68501eabc7142d0c52822bc11bc3bcf15e195d6",
+      "tag": "v0.2.1"
+    },
+    "otto-extensions": {
+      "repo": "https://github.com/otto-systems/otto-extensions",
+      "branch": "main",
+      "head": "dfa9e7ed7507f5283f2ddaac8ed7e894300ee4e8",
+      "tag": "v0.2.1"
+    },
+    "otto-protocol": {
+      "repo": "https://github.com/otto-systems/otto-protocol",
+      "branch": "main",
+      "head": "5663a557cb27c793e8982c7f6fbfee66d49f3b71",
+      "tag": "v0.2.1"
+    },
+    "otto-server": {
+      "repo": "https://github.com/otto-systems/otto-server",
+      "branch": "main",
+      "head": "aad07778063bae4837638c9aa60f67fb5b007516",
+      "tag": "v0.2.1"
+    }
+  },
+  "manifests": {
+    "release": "manifests/release-0.2.1.json",
+    "latest": "manifests/latest.json"
+  },
+  "validation": {
+    "typescriptNoEmit": "pass",
+    "repoSync": "pass"
+  },
+  "githubReleases": {
+    "otto-kernel": "https://github.com/otto-systems/otto-kernel/releases/tag/v0.2.1",
+    "otto-update": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.1",
+    "otto-command-service": "https://github.com/otto-systems/otto-command-service/releases/tag/v0.2.1",
+    "otto-ui": "https://github.com/otto-systems/otto-ui/releases/tag/v0.2.1",
+    "otto-extensions": "https://github.com/otto-systems/otto-extensions/releases/tag/v0.2.1",
+    "otto-protocol": "https://github.com/otto-systems/otto-protocol/releases/tag/v0.2.1",
+    "otto-server": "https://github.com/otto-systems/otto-server/releases/tag/v0.2.1"
+  },
+  "updatedAt": "2026-07-03T15:54:38.261Z"
+}
