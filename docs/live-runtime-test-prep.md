@@ -51,6 +51,12 @@ Relevant runtime wiring already validated in source/payloads:
 - Command-service contract guard: `src/shared/utils/commandServiceContract.ts`
 - Otto-managed payload and telemetry definitions: `otto/maestro-payload.json`
 
+### Active Otto bootstrap contract
+
+- `cd /Users/dev-macbook/Documents/GitHub/Otto/otto-update && OTTO_DRY_RUN=1 ./bootstrap.sh`: pass
+- `otto-update` bootstrap stages now execute in the active multi-repo workspace.
+- On macOS, service-oriented stages return explicit Windows-only responses from the underlying handlers, which is expected for the current command-service implementation.
+
 ## Remaining Manual Live Checks
 
 ### CourseForge live test checklist
@@ -78,9 +84,9 @@ Relevant runtime wiring already validated in source/payloads:
 
 ## Known Limits From This Preparation Pass
 
-- The active Otto workspace repo `/Users/dev-macbook/Documents/GitHub/Otto/otto-update` does not contain `bootstrap.sh`, so the requested central `OTTO_DRY_RUN=1 bootstrap.sh` check could not be executed there.
 - This session did not perform interactive GUI observation, so splash rendering, restart UX, node-graph rendering, telemetry panels, and auth-page visuals remain pending manual execution.
 - Maestro currently exposes bootstrap installer scripts rather than a packaged installer build command inside the repository.
+- Otto service lifecycle dry-runs on macOS are limited by Windows-only service handlers in the command-service implementation.
 
 ## Recommendation
 

@@ -72,14 +72,16 @@ Executed in:
 
 ## Bootstrap Dry-Run
 
-- Command attempted: `cd /Users/dev-macbook/Documents/GitHub/Otto/otto-update && OTTO_DRY_RUN=1 ./bootstrap.sh`
-- Result: blocked
-- Failure: `zsh: no such file or directory: ./bootstrap.sh`
+- Command executed: `cd /Users/dev-macbook/Documents/GitHub/Otto/otto-update && OTTO_DRY_RUN=1 ./bootstrap.sh`
+- Result: pass
+- Outcome summary:
+	- `config.show` stages succeeded
+	- `service.status`, `service.install`, and `service.start` returned explicit `only supported on Windows` responses from the command handlers
 
-The active Otto workspace repo at `/Users/dev-macbook/Documents/GitHub/Otto/otto-update` does not contain a `bootstrap.sh` entrypoint, so bootstrap dry-run verification could not be completed there. This is an artifact gap, not a TypeScript build/test failure.
+The active Otto workspace repo now contains a working `bootstrap.sh` entrypoint and bootstrap contract in `src/main.ts`. The dry-run completes successfully on macOS, with expected platform limits from Windows-only service handlers.
 
 ## Conclusion
 
-- The Otto ecosystem passed typecheck, test, build, generator, and Maestro contract validation after the CourseForge compatibility fixes applied during this verification pass.
-- The remaining workspace-level blocker is the missing `bootstrap.sh` artifact in the active `Otto/otto-update` repo.
+- The Otto ecosystem passed typecheck, test, build, generator, Maestro contract validation, and active-repo bootstrap dry-run after the follow-up bootstrap fix.
+- No workspace-level migration blocker remains from the previously missing `bootstrap.sh` artifact.
 - No evidence of standalone CLI or embedded command-service ownership was found in the audited active source paths.

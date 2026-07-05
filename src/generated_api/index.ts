@@ -593,7 +593,7 @@ export async function executeGeneratedCommand(commandName: string, params: Recor
   if (!schema) {
     throw new Error(`Unknown generated command: ${commandName}`);
   }
-  const handlerUrl = new URL(`../../otto-command-service/src/handlers/${schema.routing.handlerModule}`, import.meta.url);
+  const handlerUrl = new URL(`../../../otto-command-service/src/handlers/${schema.routing.handlerModule}`, import.meta.url);
   const mod = await import(handlerUrl.href);
   const fn = mod[schema.routing.handlerExport];
   if (typeof fn !== "function") {
