@@ -67,3 +67,36 @@ The repository contains a standalone Rust CLI crate (`ottoupdate-cli`) with dire
 
 ## Scope of Required Migration
 To satisfy the architecture rule, all command definitions and logic currently in `ottoupdate-cli` must move into a command service layer, then regenerate CLI/API surfaces from that layer.
+
+## Summary of Fixes
+- Migrated standalone CLI commands into command schemas under `otto-command-service/commands`.
+- Moved command logic to command handlers under `otto-command-service/handlers`.
+- Added generators for CLI and API surfaces under:
+  - `otto-command-service/generators/cli-generator/generate.mjs`
+  - `otto-command-service/generators/api-generator/generate.mjs`
+- Generated surfaces now live in:
+  - `src/generated_cli/index.ts`
+  - `src/generated_api/index.ts`
+- Removed the standalone `ottoupdate-cli` crate from the Rust workspace.
+
+## Migrated Commands
+- `config.show`
+- `config.set`
+- `service.install`
+- `service.start`
+- `service.stop`
+- `service.status`
+- `service.uninstall`
+
+## Deleted Files
+- `ottoupdate/ottoupdate-cli/Cargo.toml`
+- `ottoupdate/ottoupdate-cli/src/main.rs`
+- `ottoupdate/ottoupdate-cli/src/commands/mod.rs`
+- `ottoupdate/ottoupdate-cli/src/commands/config.rs`
+- `ottoupdate/ottoupdate-cli/src/commands/service.rs`
+
+## New Architecture
+- Commands are now source-of-truth service schemas in `otto-command-service/commands`.
+- Handler logic exists once in `otto-command-service/handlers`.
+- CLI and API surfaces are generated artifacts in `src/generated_cli` and `src/generated_api`.
+- Application wiring in `src/main.ts` and `src/index.ts` consumes only generated command surfaces.
