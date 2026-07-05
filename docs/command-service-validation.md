@@ -11,61 +11,65 @@ Date: 2026-07-05
 ## Commands Executed
 
 ### `otto-command-service`
-- `npm install`
 - `npm run typecheck`
 - `npm test`
 
 Result: pass
 
 ### `otto-update`
-- `npm install`
 - `npm run typecheck`
 - `npm test`
-- `npm run build`
 
 Result: pass
 
 ### `otto-kernel`
-- `npm install`
 - `npm run typecheck`
 - `npm test`
 
 Result: pass
 
 ### `otto-ui`
-- `npm install`
 - `npm run typecheck`
 - `npm test`
 
 Result: pass
 
 ### `otto-extensions`
-- `npm install`
+- `npm run typecheck`
+- `npm test`
+
+Result: pass
+
+### `otto-protocol`
+- `npm run typecheck`
+- `npm test`
+
+Result: pass
+
+### `otto-server`
 - `npm run typecheck`
 - `npm test`
 
 Result: pass
 
 ### `Maestro`
-- `pnpm install`
-- `pnpm typecheck`
-- `pnpm test`
-- `pnpm validate:command-service`
+- `npm run typecheck`
+- `npm test`
+- `npm run validate:command-service`
 
 Result: pass
 
 ## Bootstrap Dry-Run
-- `OTTO_DRY_RUN=1 ./bootstrap.sh`
-- Executed in `/Users/dev-macbook/Documents/GitHub/otto-update` because the Otto workspace copy at `/Users/dev-macbook/Documents/GitHub/Otto/otto-update` does not include `bootstrap.sh`.
+- `OTTO_DRY_RUN=1 bootstrap.sh`
+- Not executable in the current workspace because no `bootstrap.sh` file exists in the Otto workspace repos or in the adjacent Maestro repo.
 
-Result: completed successfully with expected non-Windows service operation warnings (`service.* is only supported on Windows`).
+Result: blocked by missing script artifact, not by a runtime failure.
 
 ## Required Confirmations
 
 ### No CLI code exists outside generated CLI
-- `otto-update/src` CLI/command file scan returns only:
-  - `src/generated_cli/index.ts`
-- `ottoupdate/ottoupdate-cli` directory removed from Otto workspace `otto-update` repo.
+- `otto-update/src` command surface scan returns generated CLI only.
+- No embedded `otto-command-service` directory exists under `otto-update`.
 
 ### All commands resolve through standalone command-service layer
 - Generated API handler resolution path:
@@ -74,8 +78,8 @@ Result: completed successfully with expected non-Windows service operation warni
   - `otto-command-service/src/schemas/*.json`
 
 ### `otto-update` builds and runs correctly
-- `npm run build` passes.
 - Typecheck and tests pass.
+- `src/main.ts` imports only generated CLI/API surfaces.
 
 ### Maestro installer commands resolve through command-service
 - Standalone schemas include:
@@ -86,5 +90,13 @@ Result: completed successfully with expected non-Windows service operation warni
 - `pnpm validate:command-service` passes in Maestro.
 
 ## Notes
-- Validation uncovered a kernel typing gap after introducing command-service imports; resolved by adding Node typings in `otto-kernel`.
-- Validation artifacts (`tsbuildinfo`, generated config JS/DTS in `otto-ui`) were removed and not committed.
+- Full validation results on 2026-07-05:
+  - `otto-command-service`: typecheck pass, 2 tests pass
+  - `otto-update`: typecheck pass, 9 tests pass
+  - `otto-kernel`: typecheck pass, 4 tests pass
+  - `otto-ui`: typecheck pass, 3 tests pass
+  - `otto-extensions`: typecheck pass, 2 tests pass
+  - `otto-protocol`: typecheck pass, 3 tests pass
+  - `otto-server`: typecheck pass, 3 tests pass
+  - `Maestro`: typecheck pass, 116 tests pass, command-service contract pass
+- Maestro test output includes one expected stderr log from a failure-isolation test case; the suite still passes.

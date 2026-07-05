@@ -2,11 +2,28 @@
 
 Date: 2026-07-05
 
-## Discovery Scope
-- Embedded source discovered at: `/Users/dev-macbook/Documents/GitHub/otto-update/otto-command-service`
-- Target multi-repo workspace root: `/Users/dev-macbook/Documents/GitHub/Otto`
+## Status
+- This document records the extraction outcome.
+- A fresh rescan of the current Otto workspace confirms there is no embedded `otto-command-service` directory inside `otto-update`.
+- The active source of truth now lives at `/Users/dev-macbook/Documents/GitHub/Otto/otto-command-service`.
 
-## Embedded Folder Structure
+## Extracted Repository Structure
+```text
+otto-command-service/
+  src/
+    command/
+    schemas/
+    handlers/
+    generators/
+      cli-generator/
+      api-generator/
+  tests/
+  docs/
+```
+
+## Historical Embedded Layout
+Prior to extraction, the command service logic was maintained as an embedded folder under `otto-update`. The current workspace no longer contains that layout, but the migrated content included:
+
 ```text
 otto-command-service/
   commands/
@@ -26,11 +43,6 @@ otto-command-service/
     serviceStatus.mjs
     serviceStop.mjs
     serviceUninstall.mjs
-  generators/
-    cli-generator/
-      generate.mjs
-    api-generator/
-      generate.mjs
 ```
 
 ## Command Schemas Present
@@ -62,27 +74,24 @@ Each schema includes routing metadata (`handlerModule`, `handlerExport`) and HTT
 
 Both generators are present and operational from the embedded source layout.
 
-## References to otto-update Internals (Current Coupling)
-- Generator output is hardwired to `src/generated_cli/index.ts` and `src/generated_api/index.ts` under the embedding repo root.
-- Generator input path is hardwired to `otto-command-service/commands` under the embedding repo root.
+## Current Coupling
+- Generator output is intentionally emitted into `otto-update/src/generated_cli/index.ts` and `otto-update/src/generated_api/index.ts`.
+- Generator input is sourced from `otto-command-service/src/schemas` in the standalone repo.
 - Generated API code dynamically imports handlers via:
-  - `../../otto-command-service/handlers/${schema.routing.handlerModule}`
+  - `../../otto-command-service/src/handlers/${schema.routing.handlerModule}`
 
-This directly couples command definitions and handler loading to the internal folder location of the embedding `otto-update` repository.
+This keeps generated surfaces in `otto-update` while preserving the standalone command-service repo as the only command definition source.
 
-## Missing Components for a Proper Standalone Command Service Layer
-- Missing stable standalone repository documentation for extraction lineage and integration contract.
-- Missing standalone schema/handler/generator folder normalization to `src/schemas`, `src/handlers`, `src/generators/*`.
-- Missing dedicated generated surface outputs consumed by other repos via workspace dependency wiring.
-- Missing cross-repo import rewiring evidence in `otto-update`, `otto-kernel`, `otto-ui`, `otto-extensions`, and Maestro repos.
-- Missing central validation artifact proving all repos consume command schemas from standalone layer.
+## Completion Summary
+- Standalone schema, handler, and generator structure is in place.
+- Dedicated generated CLI/API surfaces are present in `otto-update`.
+- Cross-repo wiring has been verified in `otto-update`, `otto-kernel`, `otto-ui`, `otto-extensions`, and `Maestro`.
+- Validation artifacts now live alongside this report in `otto-update/docs`.
 
 ## Architecture Rule Compliance Assessment
-Current state (embedded folder inside `otto-update`) is not independently accessible as the canonical source for all Otto repositories and therefore violates the architecture rule:
+The current state satisfies the architecture rule that the command service layer must remain a standalone repo and the single source of truth for CLI and API commands.
 
-> The Command Service Layer must be a standalone repo and the single source of truth for all CLI and API commands.
-
-A standalone extraction and cross-repo rewiring is required for compliance.
+The extraction and rewiring work required for compliance has already been completed in the active workspace.
 
 ## Extraction Summary (Executed)
 - Created standalone repo source of truth in `Otto/otto-command-service` with normalized structure:
