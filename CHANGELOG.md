@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.4 - 2026-07-05
+- Bugfix release: synchronized git state and bumped project/version manifests to 0.2.4.
+
 ## 0.2.2 - 2026-07-05
 - Removed standalone `ottoupdate-cli` implementation and migrated all commands to the Command Service Layer.
 - Added command schemas and handlers under `otto-command-service`.

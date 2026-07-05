@@ -1,7 +1,7 @@
 {
   "repo": "otto-update",
-  "syncedAt": "2026-07-05T17:45:54.000Z",
-  "targetVersion": "0.2.3",
+  "syncedAt": "2026-07-05T17:49:32.000Z",
+  "targetVersion": "0.2.4",
   "manifestConsistency": "validated",
   "schemaConsistency": "validated",
   "versionStatus": "aligned",
@@ -9,31 +9,31 @@
   "commit": {
     "status": "committed",
     "hash": "3f4b596ebbb49b7d95a77d21bc19f9a26b6bcf9c",
-    "message": "release 0.2.3 metadata aligned to current HEAD"
+    "message": "release 0.2.4 metadata aligned to current HEAD"
   },
   "push": {
     "status": "pushed"
   },
-  "updatedAt": "2026-07-05T17:45:54.000Z",
-  "releaseVersion": "0.2.3",
+  "updatedAt": "2026-07-05T17:49:32.000Z",
+  "releaseVersion": "0.2.4",
   "releaseMetadata": {
     "channel": "stable",
-    "updateManifest": "manifests/release-0.2.3.json",
+    "updateManifest": "manifests/release-0.2.4.json",
     "latestManifest": "manifests/latest.json"
   },
   "validation": {
     "typescriptNoEmit": "pass"
   },
   "syncStage": "post_release_stabilization",
-  "releaseTag": "v0.2.3",
+  "releaseTag": "v0.2.4",
   "tags": {
     "status": "pushed",
-    "name": "v0.2.3"
+    "name": "v0.2.4"
   },
-  "releaseLedger": "manifests/gitops-release-ledger-0.2.3.json",
+  "releaseLedger": "manifests/gitops-release-ledger-0.2.4.json",
   "release": {
     "status": "published",
-    "tag": "v0.2.3",
-    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.3"
+    "tag": "v0.2.4",
+    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.4"
   }
 }
