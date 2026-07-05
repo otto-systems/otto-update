@@ -35,7 +35,7 @@ pub enum RepoError {
     CacheParse(String),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct BackupManifestRepo {
     primary: String,
     secondaries: Vec<String>,

@@ -174,6 +174,7 @@ mod tests {
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
 
+    use async_trait::async_trait;
     use anyhow::{anyhow, Result};
     use chrono::{Duration, Utc};
 
@@ -187,6 +188,7 @@ mod tests {
         manifest: ReleaseManifest,
     }
 
+    #[async_trait]
     impl ManifestFetcher for StubManifestFetcher {
         async fn fetch(&self, _url: &str) -> Result<ReleaseManifest> {
             Ok(self.manifest.clone())
@@ -197,6 +199,7 @@ mod tests {
         decision: PolicyDecision,
     }
 
+    #[async_trait]
     impl PolicyEngine for StubPolicyEngine {
         async fn evaluate(&self, _manifest: &ReleaseManifest) -> Result<PolicyDecision> {
             Ok(self.decision.clone())
@@ -205,6 +208,7 @@ mod tests {
 
     struct StubDownloader;
 
+    #[async_trait]
     impl Downloader for StubDownloader {
         async fn download(&self, _artifact: &Artifact) -> Result<PathBuf> {
             Ok(PathBuf::from("/tmp/otto-artifact.bin"))
@@ -215,6 +219,7 @@ mod tests {
         should_fail: bool,
     }
 
+    #[async_trait]
     impl Verifier for StubVerifier {
         async fn verify(&self, _path: &Path, _artifact: &Artifact) -> Result<()> {
             if self.should_fail {
@@ -229,6 +234,7 @@ mod tests {
         rollback_called: Arc<AtomicBool>,
     }
 
+    #[async_trait]
     impl Applier for StubApplier {
         async fn apply(&self, _path: &Path, _manifest: &ReleaseManifest) -> Result<()> {
             if self.should_fail_apply {

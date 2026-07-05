@@ -1,12 +1,13 @@
 use std::time::Duration;
 
+use async_trait::async_trait;
 use anyhow::{anyhow, Result};
 use reqwest::StatusCode;
 use tracing::{instrument, warn};
 
 use crate::traits::ReleaseManifest;
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait ManifestFetcher: Send + Sync {
     async fn fetch(&self, url: &str) -> Result<ReleaseManifest>;
 }
@@ -47,6 +48,7 @@ impl Default for HttpManifestFetcher {
     }
 }
 
+#[async_trait]
 impl ManifestFetcher for HttpManifestFetcher {
     #[instrument(skip(self), fields(url = %url, timeout_ms = self.request_timeout.as_millis()))]
     async fn fetch(&self, url: &str) -> Result<ReleaseManifest> {

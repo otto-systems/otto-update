@@ -1,0 +1,14 @@
+{
+  "product": "otto-system",
+  "currentVersion": "0.2.1",
+  "targetVersion": "0.2.2",
+  "channel": "stable",
+  "publishedAt": "2026-07-05T17:38:09.000Z",
+  "artifacts": [
+    {
+      "name": "otto-system-0.2.2-macos-arm64.tar.gz",
+      "url": "https://updates.otto.local/releases/0.2.2/otto-system-0.2.2-macos-arm64.tar.gz",
+      "checksum": "sha256:pending"
+    }
+  ]
+}
