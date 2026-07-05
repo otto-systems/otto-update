@@ -8,7 +8,7 @@
   "releasePrep": "completed",
   "commit": {
     "status": "committed",
-    "hash": "3f4b596ebbb49b7d95a77d21bc19f9a26b6bcf9c",
+    "hash": "49d05b9479e76a161e4f681c6dadea1e280b1987",
     "message": "release 0.2.4 metadata aligned to current HEAD"
   },
   "push": {
