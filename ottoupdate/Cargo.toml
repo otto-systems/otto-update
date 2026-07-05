@@ -2,8 +2,7 @@
 members = [
   "ottoupdate-core",
   "ottoupdate-server",
-  "ottoupdate-client",
-  "ottoupdate-cli"
+  "ottoupdate-client"
 ]
 resolver = "2"
 
