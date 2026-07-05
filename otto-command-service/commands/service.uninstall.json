@@ -1,0 +1,14 @@
+{
+  "name": "service.uninstall",
+  "description": "Uninstall OttoUpdate service.",
+  "parameters": { "type": "object", "properties": {} },
+  "returnType": { "type": "object", "properties": { "ok": { "type": "boolean" }, "message": { "type": "string" } } },
+  "errorTypes": ["UnsupportedPlatformError", "ServiceCommandError"],
+  "permissions": ["service:manage"],
+  "routing": {
+    "handlerModule": "serviceUninstall.mjs",
+    "handlerExport": "handle",
+    "exposedAs": ["cli", "api"],
+    "http": { "method": "DELETE", "path": "/v1/commands/service/uninstall" }
+  }
+}

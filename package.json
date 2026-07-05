@@ -1,6 +1,6 @@
 {
   "name": "@otto/update",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
@@ -9,6 +9,9 @@
     "dist"
   ],
   "scripts": {
+    "generate:api": "node ./otto-command-service/generators/api-generator/generate.mjs",
+    "generate:cli": "node ./otto-command-service/generators/cli-generator/generate.mjs",
+    "generate:surfaces": "npm run generate:api && npm run generate:cli",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"

@@ -1,0 +1,28 @@
+{
+  "name": "config.set",
+  "description": "Mutate OttoUpdate server configuration.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "path": { "type": "string", "default": "./config/server.toml" },
+      "bind": { "type": ["string", "null"] },
+      "bearer_token": { "type": ["string", "null"] }
+    }
+  },
+  "returnType": {
+    "type": "object",
+    "properties": {
+      "updatedPath": { "type": "string" },
+      "bind": { "type": "string" },
+      "bearer_token": { "type": ["string", "null"] }
+    }
+  },
+  "errorTypes": ["ConfigWriteError", "ConfigParseError"],
+  "permissions": ["config:write"],
+  "routing": {
+    "handlerModule": "configSet.mjs",
+    "handlerExport": "handle",
+    "exposedAs": ["cli", "api"],
+    "http": { "method": "POST", "path": "/v1/commands/config/set" }
+  }
+}
