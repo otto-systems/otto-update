@@ -9,11 +9,15 @@
     "dist"
   ],
   "scripts": {
+    "generate:api": "node ../otto-command-service/src/generators/api-generator/generate.mjs",
+    "generate:cli": "node ../otto-command-service/src/generators/cli-generator/generate.mjs",
+    "generate:surfaces": "npm run generate:api && npm run generate:cli",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
+    "@otto/command-service": "file:../otto-command-service",
     "@otto/protocol": "file:../otto-protocol"
   },
   "devDependencies": {
