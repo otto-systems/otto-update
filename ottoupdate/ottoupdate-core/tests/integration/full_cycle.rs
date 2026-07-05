@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
+use async_trait::async_trait;
 use anyhow::{anyhow, Result};
 use chrono::{Duration, Utc};
 use ottoupdate_core::coordinator::{UpdateConfig, UpdateCoordinator, UpdateOutcome};
@@ -16,6 +17,7 @@ struct TestPolicyEngine {
     decision: PolicyDecision,
 }
 
+#[async_trait]
 impl PolicyEngine for TestPolicyEngine {
     async fn evaluate(&self, _manifest: &ReleaseManifest) -> Result<PolicyDecision> {
         Ok(self.decision.clone())
@@ -26,6 +28,7 @@ struct TestDownloader {
     payload: Vec<u8>,
 }
 
+#[async_trait]
 impl Downloader for TestDownloader {
     async fn download(&self, _artifact: &Artifact) -> Result<PathBuf> {
         let path = std::env::temp_dir().join(format!("full-cycle-{}.bin", uuid::Uuid::new_v4()));
@@ -36,6 +39,7 @@ impl Downloader for TestDownloader {
 
 struct TestVerifier;
 
+#[async_trait]
 impl Verifier for TestVerifier {
     async fn verify(&self, _path: &Path, _artifact: &Artifact) -> Result<()> {
         Ok(())
@@ -47,6 +51,7 @@ struct TestApplier {
     rollback_called: Arc<AtomicBool>,
 }
 
+#[async_trait]
 impl Applier for TestApplier {
     async fn apply(&self, _path: &Path, _manifest: &ReleaseManifest) -> Result<()> {
         if self.apply_fails {

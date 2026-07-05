@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use async_trait::async_trait;
 use anyhow::{anyhow, Result};
 use tokio::fs;
 use tokio::sync::Mutex;
@@ -7,7 +8,7 @@ use tracing::{debug, instrument};
 
 use crate::traits::ReleaseManifest;
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait Applier: Send + Sync {
     async fn apply(&self, path: &Path, manifest: &ReleaseManifest) -> Result<()>;
     async fn rollback(&self) -> Result<()>;
@@ -47,6 +48,7 @@ impl AtomicApplier {
     }
 }
 
+#[async_trait]
 impl Applier for AtomicApplier {
     #[instrument(skip(self), fields(path = %path.display(), version = %manifest.version))]
     async fn apply(&self, path: &Path, manifest: &ReleaseManifest) -> Result<()> {

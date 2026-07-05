@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, HashSet};
 
+use async_trait::async_trait;
 use chrono::{DateTime, Datelike, Duration, NaiveTime, TimeZone, Utc, Weekday};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -270,7 +271,7 @@ impl PolicyEngine {
     }
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait ConditionEvaluator: Send + Sync {
     async fn evaluate(&self, state: &DeviceState) -> bool;
 }
@@ -280,7 +281,7 @@ struct EqConditionEvaluator {
     expected: Value,
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 impl ConditionEvaluator for EqConditionEvaluator {
     async fn evaluate(&self, state: &DeviceState) -> bool {
         state.field_value(&self.field) == self.expected
@@ -292,7 +293,7 @@ struct NeqConditionEvaluator {
     expected: Value,
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 impl ConditionEvaluator for NeqConditionEvaluator {
     async fn evaluate(&self, state: &DeviceState) -> bool {
         state.field_value(&self.field) != self.expected
@@ -305,7 +306,7 @@ struct CompareConditionEvaluator {
     op: ConditionOperator,
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 impl ConditionEvaluator for CompareConditionEvaluator {
     async fn evaluate(&self, state: &DeviceState) -> bool {
         let left = state.field_value(&self.field);
@@ -344,7 +345,7 @@ struct InConditionEvaluator {
     inverted: bool,
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 impl ConditionEvaluator for InConditionEvaluator {
     async fn evaluate(&self, state: &DeviceState) -> bool {
         let value = state.field_value(&self.field);
@@ -362,7 +363,7 @@ struct ContainsConditionEvaluator {
     expected: Value,
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 impl ConditionEvaluator for ContainsConditionEvaluator {
     async fn evaluate(&self, state: &DeviceState) -> bool {
         let value = state.field_value(&self.field);
@@ -382,7 +383,7 @@ struct ExistsConditionEvaluator {
     field: String,
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 impl ConditionEvaluator for ExistsConditionEvaluator {
     async fn evaluate(&self, state: &DeviceState) -> bool {
         !state.field_value(&self.field).is_null()

@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use async_trait::async_trait;
 use anyhow::{anyhow, Result};
 use tokio::fs::{self, File};
 use tokio::io::AsyncWriteExt;
@@ -8,7 +9,7 @@ use tracing::{debug, instrument};
 
 use crate::traits::Artifact;
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait Downloader: Send + Sync {
     async fn download(&self, artifact: &Artifact) -> Result<PathBuf>;
 }
@@ -41,6 +42,7 @@ impl StreamingDownloader {
     }
 }
 
+#[async_trait]
 impl Downloader for StreamingDownloader {
     #[instrument(skip(self), fields(artifact_id = %artifact.id, url = %artifact.url))]
     async fn download(&self, artifact: &Artifact) -> Result<PathBuf> {

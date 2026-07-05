@@ -1,5 +1,6 @@
 use std::path::Path;
 
+use async_trait::async_trait;
 use anyhow::{anyhow, Result};
 use base64::Engine;
 use ed25519_dalek::{Signature, Verifier as _, VerifyingKey};
@@ -9,7 +10,7 @@ use tracing::{instrument, warn};
 
 use crate::traits::Artifact;
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait Verifier: Send + Sync {
     async fn verify(&self, path: &Path, artifact: &Artifact) -> Result<()>;
 }
@@ -38,6 +39,7 @@ impl Ed25519Verifier {
     }
 }
 
+#[async_trait]
 impl Verifier for Ed25519Verifier {
     #[instrument(skip(self), fields(artifact_id = %artifact.id, path = %path.display()))]
     async fn verify(&self, path: &Path, artifact: &Artifact) -> Result<()> {

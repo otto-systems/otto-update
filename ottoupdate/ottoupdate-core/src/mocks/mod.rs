@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use async_trait::async_trait;
 use anyhow::Result;
 use mockall::mock;
 
@@ -12,7 +13,7 @@ use crate::verifier::Verifier;
 mock! {
     pub ManifestFetcher {}
 
-    #[allow(async_fn_in_trait)]
+    #[async_trait]
     impl ManifestFetcher for ManifestFetcher {
         async fn fetch(&self, url: &str) -> Result<ReleaseManifest>;
     }
@@ -21,7 +22,7 @@ mock! {
 mock! {
     pub PolicyEngine {}
 
-    #[allow(async_fn_in_trait)]
+    #[async_trait]
     impl PolicyEngine for PolicyEngine {
         async fn evaluate(&self, manifest: &ReleaseManifest) -> Result<PolicyDecision>;
     }
@@ -30,7 +31,7 @@ mock! {
 mock! {
     pub Downloader {}
 
-    #[allow(async_fn_in_trait)]
+    #[async_trait]
     impl Downloader for Downloader {
         async fn download(&self, artifact: &Artifact) -> Result<PathBuf>;
     }
@@ -39,7 +40,7 @@ mock! {
 mock! {
     pub Verifier {}
 
-    #[allow(async_fn_in_trait)]
+    #[async_trait]
     impl Verifier for Verifier {
         async fn verify(&self, path: &Path, artifact: &Artifact) -> Result<()>;
     }
@@ -48,7 +49,7 @@ mock! {
 mock! {
     pub Applier {}
 
-    #[allow(async_fn_in_trait)]
+    #[async_trait]
     impl Applier for Applier {
         async fn apply(&self, path: &Path, manifest: &ReleaseManifest) -> Result<()>;
         async fn rollback(&self) -> Result<()>;

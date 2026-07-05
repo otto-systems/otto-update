@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
+use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::fs;
@@ -116,7 +117,7 @@ impl UpdateState {
     }
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait StateTransitionHooks: Send + Sync {
     async fn on_exit(
         &self,
@@ -142,6 +143,7 @@ pub struct StateSnapshot {
 
 pub struct NoopHooks;
 
+#[async_trait]
 impl StateTransitionHooks for NoopHooks {}
 
 pub struct StateMachine {

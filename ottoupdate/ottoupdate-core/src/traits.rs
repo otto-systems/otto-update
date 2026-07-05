@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -41,7 +42,7 @@ pub enum PolicyDecision {
     },
 }
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait PolicyEngine: Send + Sync {
     async fn evaluate(&self, manifest: &ReleaseManifest) -> Result<PolicyDecision>;
 }

@@ -1,39 +1,39 @@
 {
   "repo": "otto-update",
-  "syncedAt": "2026-07-03T16:00:14.258Z",
-  "targetVersion": "0.2.1",
+  "syncedAt": "2026-07-05T17:45:54.000Z",
+  "targetVersion": "0.2.3",
   "manifestConsistency": "validated",
   "schemaConsistency": "validated",
   "versionStatus": "aligned",
   "releasePrep": "completed",
   "commit": {
     "status": "committed",
-    "hash": "42775ced980ee9ef4acef5b5a93d5154b4378c15",
-    "message": "release 0.2.1 metadata aligned to current HEAD"
+    "hash": "3f4b596ebbb49b7d95a77d21bc19f9a26b6bcf9c",
+    "message": "release 0.2.3 metadata aligned to current HEAD"
   },
   "push": {
     "status": "pushed"
   },
-  "updatedAt": "2026-07-03T16:00:14.258Z",
-  "releaseVersion": "0.2.1",
+  "updatedAt": "2026-07-05T17:45:54.000Z",
+  "releaseVersion": "0.2.3",
   "releaseMetadata": {
     "channel": "stable",
-    "updateManifest": "manifests/release-0.2.1.json",
+    "updateManifest": "manifests/release-0.2.3.json",
     "latestManifest": "manifests/latest.json"
   },
   "validation": {
     "typescriptNoEmit": "pass"
   },
   "syncStage": "post_release_stabilization",
-  "releaseTag": "v0.2.1",
+  "releaseTag": "v0.2.3",
   "tags": {
     "status": "pushed",
-    "name": "v0.2.1"
+    "name": "v0.2.3"
   },
-  "releaseLedger": "manifests/gitops-release-ledger-0.2.1.json",
+  "releaseLedger": "manifests/gitops-release-ledger-0.2.3.json",
   "release": {
     "status": "published",
-    "tag": "v0.2.1",
-    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.1"
+    "tag": "v0.2.3",
+    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.3"
   }
 }
