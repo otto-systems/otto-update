@@ -1,0 +1,71 @@
+name: macos-installer-validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "ottoupdate/**"
+      - ".github/workflows/macos-installer-validation.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "ottoupdate/**"
+      - ".github/workflows/macos-installer-validation.yml"
+
+jobs:
+  validate-install:
+    runs-on: macos-14
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            ottoupdate
+
+      - name: Build ottoupdate-server
+        working-directory: ottoupdate
+        run: cargo build --release -p ottoupdate-server
+
+      - name: Install launch daemon
+        working-directory: ottoupdate
+        run: |
+          chmod +x deploy/macos/install.sh
+          sudo ./deploy/macos/install.sh
+
+      - name: Wait for health endpoint
+        run: |
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:7430/health >/dev/null; then
+              echo "Service is healthy"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Timed out waiting for health endpoint" >&2
+          exit 1
+
+      - name: Run smoke checks
+        working-directory: ottoupdate
+        run: OTTOUPDATE_BASE_URL=http://127.0.0.1:7430 bash scripts/e2e_smoke.sh
+
+      - name: Dump logs on failure
+        if: failure()
+        run: |
+          sudo tail -n 200 /usr/local/var/log/ottoupdate.log || true
+          sudo tail -n 200 /usr/local/var/log/ottoupdate.err.log || true
+
+      - name: Cleanup launch daemon
+        if: always()
+        run: |
+          sudo launchctl unload /Library/LaunchDaemons/com.otto.ottoupdate.plist >/dev/null 2>&1 || true
+          sudo rm -f /Library/LaunchDaemons/com.otto.ottoupdate.plist
+          sudo rm -f /usr/local/bin/ottoupdate-server
