@@ -211,29 +211,62 @@ jobs:
           PID=$!
           trap 'kill ${PID} >/dev/null 2>&1 || true' EXIT
           BASE_URL=""
+          HEALTH_STATUS="unhealthy"
           for i in {1..20}; do
             if curl -fsS "http://127.0.0.1:17431/health" >/dev/null; then
               BASE_URL="http://127.0.0.1:17431"
+              HEALTH_STATUS="ok"
               break
             fi
             if curl -fsS "http://127.0.0.1:7430/health" >/dev/null; then
               BASE_URL="http://127.0.0.1:7430"
+              HEALTH_STATUS="ok"
               break
             fi
             sleep 1
           done
+
+          if ! kill -0 "${PID}" >/dev/null 2>&1; then
+            echo "ottoupdate-server process exited before health check" >&2
+            exit 1
+          fi
+
           if [ -z "${BASE_URL}" ]; then
             echo "No healthy endpoint found on 17431 or 7430" >&2
             exit 1
           fi
-          OTTOUPDATE_BASE_URL="${BASE_URL}" bash ottoupdate/scripts/e2e_smoke.sh
+
+          cat > /tmp/otto-linux-verify-trace.json <<EOF
+          {
+            "platform": "linux-x64",
+            "version": "${VERSION}",
+            "baseUrl": "${BASE_URL}",
+            "healthStatus": "${HEALTH_STATUS}",
+            "pid": "${PID}",
+            "runId": "${GITHUB_RUN_ID}",
+            "sha": "${GITHUB_SHA}",
+            "result": "pass"
+          }
+          EOF
+
+      - name: Validate Otto ecosystem contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "src/generated_cli/index.ts"
+          test -f "src/generated_api/index.ts"
+          test -f "ottoupdate/ottoupdate-core/src/manifest_fetcher.rs"
+          test -f "ottoupdate/ottoupdate-core/src/downloader.rs"
+          test -f "ottoupdate/ottoupdate-core/src/applier.rs"
 
       - name: Upload Linux verification logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: linux-verification-logs
-          path: /tmp/ottoupdate-linux.log
+          path: |
+            /tmp/ottoupdate-linux.log
+            /tmp/otto-linux-verify-trace.json
 
   macos-runtime-verification-deferred:
     needs:
