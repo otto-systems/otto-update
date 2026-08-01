@@ -210,13 +210,23 @@ jobs:
           "${WORK}/ottoupdate-server" --config "${WORK}/config.toml" >/tmp/ottoupdate-linux.log 2>&1 &
           PID=$!
           trap 'kill ${PID} >/dev/null 2>&1 || true' EXIT
+          BASE_URL=""
           for i in {1..20}; do
             if curl -fsS "http://127.0.0.1:17431/health" >/dev/null; then
+              BASE_URL="http://127.0.0.1:17431"
+              break
+            fi
+            if curl -fsS "http://127.0.0.1:7430/health" >/dev/null; then
+              BASE_URL="http://127.0.0.1:7430"
               break
             fi
             sleep 1
           done
-          OTTOUPDATE_BASE_URL="http://127.0.0.1:17431" bash ottoupdate/scripts/e2e_smoke.sh
+          if [ -z "${BASE_URL}" ]; then
+            echo "No healthy endpoint found on 17431 or 7430" >&2
+            exit 1
+          fi
+          OTTOUPDATE_BASE_URL="${BASE_URL}" bash ottoupdate/scripts/e2e_smoke.sh
 
       - name: Upload Linux verification logs
         if: always()
