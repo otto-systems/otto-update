@@ -47,7 +47,7 @@ impl Default for SafetyConfig {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct SafetyMiddlewareState {
     pub config: SafetyConfig,
     pub provider: Arc<dyn SafetyStateProvider>,

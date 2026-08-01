@@ -1547,22 +1547,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "ottoupdate-cli"
-version = "0.2.1"
-dependencies = [
- "anyhow",
- "clap",
- "ottoupdate-core",
- "serde",
- "tokio",
- "toml",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "ottoupdate-client"
-version = "0.2.1"
+version = "0.2.4"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1575,7 +1561,7 @@ dependencies = [
 
 [[package]]
 name = "ottoupdate-core"
-version = "0.2.1"
+version = "0.2.4"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1602,7 +1588,7 @@ dependencies = [
 
 [[package]]
 name = "ottoupdate-server"
-version = "0.2.1"
+version = "0.2.4"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1620,6 +1606,7 @@ dependencies = [
  "tower",
  "tracing",
  "tracing-subscriber",
+ "uuid",
  "windows-service",
 ]
 

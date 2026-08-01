@@ -90,6 +90,7 @@ pub struct RateLimitService<S> {
 
 impl<S, ReqBody> Service<axum::http::Request<ReqBody>> for RateLimitService<S>
 where
+    ReqBody: Send + 'static,
     S: Service<axum::http::Request<ReqBody>, Response = axum::http::Response<axum::body::Body>>
         + Clone
         + Send
