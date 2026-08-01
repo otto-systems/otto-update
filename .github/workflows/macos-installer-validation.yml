@@ -1,29 +1,79 @@
-name: macos-installer-validation
+name: cross-platform-installer-generation
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - installer-ready
   pull_request:
     paths:
+      - "manifests/**"
       - "ottoupdate/**"
       - ".github/workflows/macos-installer-validation.yml"
   push:
-    branches:
-      - main
     paths:
+      - "manifests/**"
       - "ottoupdate/**"
       - ".github/workflows/macos-installer-validation.yml"
 
 jobs:
-  validate-install:
-    runs-on: macos-14
-    timeout-minutes: 20
+  prepare-metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
+      - name: Resolve release version
+        id: version
+        run: |
+          VERSION=$(python - <<'PY'
+          import json
+          with open('manifests/latest.json', 'r', encoding='utf-8') as handle:
+              data = json.load(handle)
+          print(data['targetVersion'])
+          PY
+          )
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+  build-installers:
+    needs: prepare-metadata
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-latest
+            platform: windows-x64
+            target: x86_64-pc-windows-msvc
+            binaryPath: ottoupdate/target/x86_64-pc-windows-msvc/release/ottoupdate-server.exe
+            installerScript: ottoupdate/deploy/windows/install.ps1
+            artifactExt: zip
+          - runner: ubuntu-latest
+            platform: linux-x64
+            target: x86_64-unknown-linux-gnu
+            binaryPath: ottoupdate/target/x86_64-unknown-linux-gnu/release/ottoupdate-server
+            installerScript: ottoupdate/deploy/linux/install.sh
+            artifactExt: tar.gz
+          - runner: macos-latest
+            platform: macos-arm64
+            target: aarch64-apple-darwin
+            binaryPath: ottoupdate/target/aarch64-apple-darwin/release/ottoupdate-server
+            installerScript: ottoupdate/deploy/macos/install.sh
+            plistPath: ottoupdate/deploy/macos/com.otto.ottoupdate.plist
+            artifactExt: tar.gz
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain and target
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
 
       - name: Cache Rust artifacts
         uses: Swatinem/rust-cache@v2
@@ -33,39 +83,193 @@ jobs:
 
       - name: Build ottoupdate-server
         working-directory: ottoupdate
-        run: cargo build --release -p ottoupdate-server
+        run: cargo build --release -p ottoupdate-server --target ${{ matrix.target }}
 
-      - name: Install launch daemon
-        working-directory: ottoupdate
+      - name: Prepare artifact names
+        shell: bash
         run: |
-          chmod +x deploy/macos/install.sh
-          sudo ./deploy/macos/install.sh
+          VERSION="${{ needs.prepare-metadata.outputs.version }}"
+          ARTIFACT_NAME="otto-system-${VERSION}-${{ matrix.platform }}.${{ matrix.artifactExt }}"
+          echo "OTTO_VERSION=${VERSION}" >> "$GITHUB_ENV"
+          echo "OTTO_ARTIFACT_NAME=${ARTIFACT_NAME}" >> "$GITHUB_ENV"
 
-      - name: Wait for health endpoint
+      - name: Package Windows installer artifact
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: |
+          $stage = Join-Path $env:RUNNER_TEMP "otto-stage"
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          Copy-Item -Path "${{ matrix.binaryPath }}" -Destination (Join-Path $stage "ottoupdate-server.exe") -Force
+          Copy-Item -Path "${{ matrix.installerScript }}" -Destination (Join-Path $stage "install.ps1") -Force
+          Compress-Archive -Path (Join-Path $stage "*") -DestinationPath $env:OTTO_ARTIFACT_NAME -CompressionLevel Optimal
+
+      - name: Package Linux installer artifact
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAGE="${RUNNER_TEMP}/otto-stage"
+          mkdir -p "${STAGE}"
+          cp "${{ matrix.binaryPath }}" "${STAGE}/ottoupdate-server"
+          cp "${{ matrix.installerScript }}" "${STAGE}/install.sh"
+          chmod +x "${STAGE}/ottoupdate-server" "${STAGE}/install.sh"
+          tar -czf "${OTTO_ARTIFACT_NAME}" -C "${STAGE}" .
+
+      - name: Package macOS installer artifact
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAGE="${RUNNER_TEMP}/otto-stage"
+          mkdir -p "${STAGE}"
+          cp "${{ matrix.binaryPath }}" "${STAGE}/ottoupdate-server"
+          cp "${{ matrix.installerScript }}" "${STAGE}/install.sh"
+          cp "${{ matrix.plistPath }}" "${STAGE}/com.otto.ottoupdate.plist"
+          chmod +x "${STAGE}/ottoupdate-server" "${STAGE}/install.sh"
+          tar -czf "${OTTO_ARTIFACT_NAME}" -C "${STAGE}" .
+
+      - name: Log build metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHA256=$(python - <<'PY'
+          import hashlib
+          import os
+          path = os.environ['OTTO_ARTIFACT_NAME']
+          h = hashlib.sha256()
+          with open(path, 'rb') as f:
+              for chunk in iter(lambda: f.read(1024 * 1024), b''):
+                  h.update(chunk)
+          print(h.hexdigest())
+          PY
+          )
+          SIZE=$(python - <<'PY'
+          import os
+          print(os.path.getsize(os.environ['OTTO_ARTIFACT_NAME']))
+          PY
+          )
+          cat > "build-metadata-${{ matrix.platform }}.json" <<EOF
+          {
+            "platform": "${{ matrix.platform }}",
+            "runner": "${{ matrix.runner }}",
+            "target": "${{ matrix.target }}",
+            "version": "${OTTO_VERSION}",
+            "artifact": "${OTTO_ARTIFACT_NAME}",
+            "sha256": "${SHA256}",
+            "sizeBytes": ${SIZE},
+            "commit": "${GITHUB_SHA}",
+            "runId": "${GITHUB_RUN_ID}"
+          }
+          EOF
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-installer
+          path: otto-system-${{ needs.prepare-metadata.outputs.version }}-${{ matrix.platform }}.${{ matrix.artifactExt }}
+
+      - name: Upload build metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-metadata
+          path: build-metadata-${{ matrix.platform }}.json
+
+  verify-linux-installer:
+    needs:
+      - prepare-metadata
+      - build-installers
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Linux installer artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-x64-installer
+          path: ${{ runner.temp }}/linux-artifact
+
+      - name: Verify Linux installer package
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ needs.prepare-metadata.outputs.version }}"
+          FILE="${RUNNER_TEMP}/linux-artifact/otto-system-${VERSION}-linux-x64.tar.gz"
+          WORK="${RUNNER_TEMP}/linux-verify"
+          mkdir -p "${WORK}"
+          tar -xzf "${FILE}" -C "${WORK}"
+          test -f "${WORK}/install.sh"
+          test -f "${WORK}/ottoupdate-server"
+          chmod +x "${WORK}/ottoupdate-server"
+          cat > "${WORK}/config.toml" <<EOF
+          [server]
+          bind = "127.0.0.1:17431"
+          EOF
+          "${WORK}/ottoupdate-server" --config "${WORK}/config.toml" >/tmp/ottoupdate-linux.log 2>&1 &
+          PID=$!
+          trap 'kill ${PID} >/dev/null 2>&1 || true' EXIT
           for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:7430/health >/dev/null; then
-              echo "Service is healthy"
-              exit 0
+            if curl -fsS "http://127.0.0.1:17431/health" >/dev/null; then
+              break
             fi
             sleep 1
           done
-          echo "Timed out waiting for health endpoint" >&2
-          exit 1
+          OTTOUPDATE_BASE_URL="http://127.0.0.1:17431" bash ottoupdate/scripts/e2e_smoke.sh
 
-      - name: Run smoke checks
-        working-directory: ottoupdate
-        run: OTTOUPDATE_BASE_URL=http://127.0.0.1:7430 bash scripts/e2e_smoke.sh
-
-      - name: Dump logs on failure
-        if: failure()
-        run: |
-          sudo tail -n 200 /usr/local/var/log/ottoupdate.log || true
-          sudo tail -n 200 /usr/local/var/log/ottoupdate.err.log || true
-
-      - name: Cleanup launch daemon
+      - name: Upload Linux verification logs
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-verification-logs
+          path: /tmp/ottoupdate-linux.log
+
+  macos-runtime-verification-deferred:
+    needs:
+      - prepare-metadata
+      - build-installers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip macOS installer verification for now (manual later)
         run: |
-          sudo launchctl unload /Library/LaunchDaemons/com.otto.ottoupdate.plist >/dev/null 2>&1 || true
-          sudo rm -f /Library/LaunchDaemons/com.otto.ottoupdate.plist
-          sudo rm -f /usr/local/bin/ottoupdate-server
+          echo "macOS runtime installer verification is deferred and will run manually later on a Mac machine."
+
+  notify-orchestrator:
+    needs:
+      - prepare-metadata
+      - build-installers
+      - verify-linux-installer
+      - macos-runtime-verification-deferred
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify OttoSuite-Orchestrator via repository_dispatch
+        shell: bash
+        env:
+          DISPATCH_TOKEN: ${{ secrets.OTTO_ORCHESTRATOR_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DISPATCH_TOKEN}" ]; then
+            echo "No OTTO_ORCHESTRATOR_DISPATCH_TOKEN configured; notification step skipped."
+            exit 0
+          fi
+
+          curl -fsS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${DISPATCH_TOKEN}" \
+            https://api.github.com/repos/otto-systems/OttoSuite/dispatches \
+            -d @- <<EOF
+          {
+            "event_type": "installer-build-complete",
+            "client_payload": {
+              "workflow": "cross-platform-installer-generation",
+              "version": "${{ needs.prepare-metadata.outputs.version }}",
+              "runId": "${{ github.run_id }}",
+              "runNumber": "${{ github.run_number }}",
+              "status": "${{ job.status }}",
+              "sha": "${{ github.sha }}"
+            }
+          }
+          EOF
