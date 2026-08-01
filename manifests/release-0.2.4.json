@@ -1,14 +1,19 @@
-{
-  "product": "otto-system",
-  "currentVersion": "0.2.3",
-  "targetVersion": "0.2.4",
-  "channel": "stable",
-  "publishedAt": "2026-07-05T17:49:32.000Z",
-  "artifacts": [
-    {
-      "name": "otto-system-0.2.4-macos-arm64.tar.gz",
-      "url": "https://updates.otto.local/releases/0.2.4/otto-system-0.2.4-macos-arm64.tar.gz",
-      "checksum": "sha256:pending"
-    }
-  ]
+﻿{
+    "product":  "otto-system",
+    "currentVersion":  "0.2.3",
+    "targetVersion":  "0.2.4",
+    "channel":  "stable",
+    "publishedAt":  "2026-07-05T17:49:32.000Z",
+    "artifacts":  [
+                      {
+                          "name":  "otto-system-0.2.4-macos-arm64.tar.gz",
+                          "url":  "https://updates.otto.local/releases/0.2.4/otto-system-0.2.4-macos-arm64.tar.gz",
+                          "checksum":  "sha256:2be12bf9b2dd07a58be90ac83f85e10c84942789fcae5737c01416ac9f149623"
+                      },
+                      {
+                          "name":  "otto-system-0.2.4-windows-x64.zip",
+                          "url":  "https://updates.otto.local/releases/0.2.4/otto-system-0.2.4-windows-x64.zip",
+                          "checksum":  "sha256:f2b54debdd317d22abd6a9a73a31b007c8ffccd8e4cf7b3a82fd16711eab625c"
+                      }
+                  ]
 }

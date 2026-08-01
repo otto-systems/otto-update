@@ -1,0 +1,61 @@
+{
+  "lanes": [
+    {
+      "name": "schema-and-generation",
+      "repo": "otto-command-service",
+      "commands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "name": "update-surfaces",
+      "repo": "otto-update",
+      "commands": [
+        "npm run generate:surfaces",
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "name": "dependent-repos",
+      "repo": "otto-kernel",
+      "commands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "name": "dependent-repos",
+      "repo": "otto-extensions",
+      "commands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "name": "dependent-repos",
+      "repo": "otto-ui",
+      "commands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "name": "server",
+      "repo": "otto-server",
+      "commands": [
+        "npm run typecheck",
+        "npm test"
+      ]
+    },
+    {
+      "name": "rust-runtime",
+      "repo": "otto-update",
+      "workingDirectory": "ottoupdate",
+      "commands": [
+        "cargo test --workspace"
+      ]
+    }
+  ]
+}

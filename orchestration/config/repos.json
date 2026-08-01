@@ -1,0 +1,39 @@
+{
+  "defaultHost": "github.com",
+  "defaultOwner": "otto-org",
+  "workspaceFolderName": "otto-workspace",
+  "repos": [
+    {
+      "name": "otto-update",
+      "required": true
+    },
+    {
+      "name": "otto-command-service",
+      "required": true
+    },
+    {
+      "name": "otto-protocol",
+      "required": true
+    },
+    {
+      "name": "otto-kernel",
+      "required": true
+    },
+    {
+      "name": "otto-extensions",
+      "required": true
+    },
+    {
+      "name": "otto-ui",
+      "required": true
+    },
+    {
+      "name": "otto-server",
+      "required": true
+    },
+    {
+      "name": "Maestro",
+      "required": false
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "repo": "otto-update",
-  "syncedAt": "2026-07-05T17:49:32.000Z",
+  "syncedAt": "2026-08-01T00:00:00.000Z",
   "targetVersion": "0.2.4",
   "manifestConsistency": "validated",
   "schemaConsistency": "validated",
@@ -14,7 +14,7 @@
   "push": {
     "status": "pushed"
   },
-  "updatedAt": "2026-07-05T17:49:32.000Z",
+  "updatedAt": "2026-08-01T00:00:00.000Z",
   "releaseVersion": "0.2.4",
   "releaseMetadata": {
     "channel": "stable",
@@ -24,7 +24,7 @@
   "validation": {
     "typescriptNoEmit": "pass"
   },
-  "syncStage": "post_release_stabilization",
+  "syncStage": "cross_platform_installer_go_sync",
   "releaseTag": "v0.2.4",
   "tags": {
     "status": "pushed",
@@ -35,5 +35,10 @@
     "status": "published",
     "tag": "v0.2.4",
     "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.4"
+  },
+  "latestSync": {
+    "summary": "cross-platform installer pipeline green; manifests and generated surfaces synchronized",
+    "workflowRun": "30713448248",
+    "date": "2026-08-01T00:00:00.000Z"
   }
 }
