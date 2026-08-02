@@ -1,6 +1,6 @@
 {
   "repo": "otto-update",
-  "syncedAt": "2026-08-01T00:00:00.000Z",
+  "syncedAt": "2026-08-02T00:30:00.000Z",
   "targetVersion": "0.2.4",
   "manifestConsistency": "validated",
   "schemaConsistency": "validated",
@@ -8,13 +8,13 @@
   "releasePrep": "completed",
   "commit": {
     "status": "committed",
-    "hash": "49d05b9479e76a161e4f681c6dadea1e280b1987",
-    "message": "release 0.2.4 metadata aligned to current HEAD"
+    "hash": "9a6d6b0dc2d49730770f12e4fad3c89a77b72560",
+    "message": "docs: add minimal Otto payload checklist"
   },
   "push": {
     "status": "pushed"
   },
-  "updatedAt": "2026-08-01T00:00:00.000Z",
+  "updatedAt": "2026-08-02T00:30:00.000Z",
   "releaseVersion": "0.2.4",
   "releaseMetadata": {
     "channel": "stable",
@@ -24,7 +24,7 @@
   "validation": {
     "typescriptNoEmit": "pass"
   },
-  "syncStage": "cross_platform_installer_go_sync",
+  "syncStage": "docs_payload_baseline_sync",
   "releaseTag": "v0.2.4",
   "tags": {
     "status": "pushed",
@@ -37,8 +37,7 @@
     "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.4"
   },
   "latestSync": {
-    "summary": "cross-platform installer pipeline green; manifests and generated surfaces synchronized",
-    "workflowRun": "30713448248",
-    "date": "2026-08-01T00:00:00.000Z"
+    "summary": "README baseline updated with minimal payload checklist and canonical installer references",
+    "date": "2026-08-02T00:30:00.000Z"
   }
 }
