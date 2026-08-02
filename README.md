@@ -40,3 +40,67 @@ The current workspace wiring uses:
 - GitHub Actions is the authoritative build path for Windows, Linux, and macOS installers.
 - Linux and macOS artifacts are owned by CI and are no longer cross-built locally on the Windows host.
 - The release manifests and generated reports are kept in sync with the current bugfix line.
+
+## Minimal Otto Payload Checklist
+
+To install, deploy, and retrieve payloads from manifest data correctly, include all of the following in your release package flow.
+
+### 1. Manifest Files
+
+- `manifests/latest.json`
+- `manifests/release-0.2.4.json` (or the current release file for your target version)
+
+Required manifest fields:
+
+- `product`
+- `currentVersion`
+- `targetVersion`
+- `channel`
+- `publishedAt`
+- `artifacts[]` with `name`, `url`, and `checksum` (`sha256:<64-hex>`)
+
+### 2. Payload Retrieval and Apply Modules
+
+These modules are the minimum contract for fetching manifests, downloading payloads, and applying updates:
+
+- `ottoupdate/ottoupdate-core/src/manifest_fetcher.rs`
+- `ottoupdate/ottoupdate-core/src/downloader.rs`
+- `ottoupdate/ottoupdate-core/src/applier.rs`
+
+### 3. Generated Command Surfaces
+
+The update flow must be accessible through generated command surfaces:
+
+- `src/generated_cli/index.ts`
+- `src/generated_api/index.ts`
+
+### 4. Platform Installer Payload Contents
+
+Windows payload (`.zip`) must contain:
+
+- `ottoupdate-server.exe`
+- `install.ps1`
+
+Linux payload (`.tar.gz`) should contain:
+
+- `ottoupdate-server`
+- `install.sh`
+- `ottoupdate.service`
+
+macOS payload (`.tar.gz`) should contain:
+
+- `ottoupdate-server`
+- `install.sh`
+- `com.otto.ottoupdate.plist`
+
+## Example Installer References
+
+Use these as the canonical minimal examples for future work:
+
+- Workflow (cross-platform build + verification): [.github/workflows/macos-installer-validation.yml](.github/workflows/macos-installer-validation.yml)
+- Windows installer script: [ottoupdate/deploy/windows/install.ps1](ottoupdate/deploy/windows/install.ps1)
+- Linux installer script and service unit: [ottoupdate/deploy/linux/install.sh](ottoupdate/deploy/linux/install.sh), [ottoupdate/deploy/linux/ottoupdate.service](ottoupdate/deploy/linux/ottoupdate.service)
+- macOS installer script and launchd plist: [ottoupdate/deploy/macos/install.sh](ottoupdate/deploy/macos/install.sh), [ottoupdate/deploy/macos/com.otto.ottoupdate.plist](ottoupdate/deploy/macos/com.otto.ottoupdate.plist)
+- Example packaged artifacts: [artifacts/releases/0.2.4/otto-system-0.2.4-windows-x64.zip](artifacts/releases/0.2.4/otto-system-0.2.4-windows-x64.zip), [artifacts/releases/0.2.4/otto-system-0.2.4-macos-arm64.tar.gz](artifacts/releases/0.2.4/otto-system-0.2.4-macos-arm64.tar.gz)
+
+When preparing a new bugfix release, keep the workflow, manifests, checksums, and payload file structure aligned to this baseline.
