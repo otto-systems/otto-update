@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   repository_dispatch:
     types:
+      - installer-built
       - installer-ready
   pull_request:
     paths:
@@ -65,6 +66,10 @@ jobs:
             installerScript: ottoupdate/deploy/macos/install.sh
             plistPath: ottoupdate/deploy/macos/com.otto.ottoupdate.plist
             artifactExt: tar.gz
+
+    concurrency:
+      group: installer-build-${{ github.ref_name }}-${{ matrix.platform }}
+      cancel-in-progress: false
 
     steps:
       - name: Checkout
@@ -268,22 +273,50 @@ jobs:
             /tmp/ottoupdate-linux.log
             /tmp/otto-linux-verify-trace.json
 
-  macos-runtime-verification-deferred:
+  verify-macos-installer:
     needs:
       - prepare-metadata
       - build-installers
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+    timeout-minutes: 15
     steps:
-      - name: Skip macOS installer verification for now (manual later)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download macOS installer artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-arm64-installer
+          path: ${{ runner.temp }}/macos-artifact
+
+      - name: Verify macOS installer package
+        shell: bash
         run: |
-          echo "macOS runtime installer verification is deferred and will run manually later on a Mac machine."
+          set -euo pipefail
+          VERSION="${{ needs.prepare-metadata.outputs.version }}"
+          FILE="${RUNNER_TEMP}/macos-artifact/otto-system-${VERSION}-macos-arm64.tar.gz"
+          WORK="${RUNNER_TEMP}/macos-verify"
+          mkdir -p "${WORK}"
+          tar -xzf "${FILE}" -C "${WORK}"
+          test -f "${WORK}/install.sh"
+          test -f "${WORK}/ottoupdate-server"
+          chmod +x "${WORK}/ottoupdate-server" "${WORK}/install.sh"
+          echo "macOS installer artifact verified"
+
+      - name: Upload macOS verification logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-verification-logs
+          path: |
+            ${{ runner.temp }}/macos-verify
 
   notify-orchestrator:
     needs:
       - prepare-metadata
       - build-installers
       - verify-linux-installer
-      - macos-runtime-verification-deferred
+      - verify-macos-installer
     if: always()
     runs-on: ubuntu-latest
 

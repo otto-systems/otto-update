@@ -2,6 +2,11 @@
 
 OttoUpdate is the update engine for Otto, responsible for update policies, release orchestration, and generated command execution surfaces.
 
+## Current Release Line
+
+- Version: 0.2.5
+- Bugfix focus: package and crate version bump, workflow-first cross-platform installer generation, and cleanup of generated report noise from source control.
+
 ## Responsibilities
 - Resolve and evaluate update manifests.
 - Execute update orchestration through generated command surfaces.
@@ -29,3 +34,9 @@ The current workspace wiring uses:
 - `docs/workspace-clean-state.md` – workspace cleanup and git-baseline audit
 - `docs/command-service-rescan-report.md` – cross-repo rescan and wiring verification
 - `docs/command-service-validation.md` – typecheck, tests, and contract validation results
+
+## Installer Workflow
+
+- GitHub Actions is the authoritative build path for Windows, Linux, and macOS installers.
+- Linux and macOS artifacts are owned by CI and are no longer cross-built locally on the Windows host.
+- The release manifests and generated reports are kept in sync with the current bugfix line.
