@@ -1,27 +1,27 @@
 {
-  "name": "@otto/update",
-  "version": "0.2.5",
-  "private": true,
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "generate:api": "node ../otto-command-service/src/generators/api-generator/generate.mjs",
-    "generate:cli": "node ../otto-command-service/src/generators/cli-generator/generate.mjs",
-    "generate:surfaces": "npm run generate:api && npm run generate:cli",
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@otto/command-service": "file:../otto-command-service",
-    "@otto/protocol": "file:../otto-protocol"
-  },
-  "devDependencies": {
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
-  }
+    "name":  "@otto/update",
+    "version":  "0.2.6",
+    "private":  true,
+    "type":  "module",
+    "main":  "./dist/index.js",
+    "types":  "./dist/index.d.ts",
+    "files":  [
+                  "dist"
+              ],
+    "scripts":  {
+                    "generate:api":  "node ../otto-command-service/src/generators/api-generator/generate.mjs",
+                    "generate:cli":  "node ../otto-command-service/src/generators/cli-generator/generate.mjs",
+                    "generate:surfaces":  "npm run generate:api \u0026\u0026 npm run generate:cli",
+                    "build":  "tsc -p tsconfig.json",
+                    "typecheck":  "tsc -p tsconfig.json --noEmit",
+                    "test":  "vitest run"
+                },
+    "dependencies":  {
+                         "@otto/command-service":  "file:../otto-command-service",
+                         "@otto/protocol":  "file:../otto-protocol"
+                     },
+    "devDependencies":  {
+                            "typescript":  "^5.5.4",
+                            "vitest":  "^2.0.5"
+                        }
 }

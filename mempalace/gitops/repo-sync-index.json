@@ -1,43 +1,43 @@
 {
-  "repo": "otto-update",
-  "syncedAt": "2026-08-02T00:30:00.000Z",
-  "targetVersion": "0.2.4",
-  "manifestConsistency": "validated",
-  "schemaConsistency": "validated",
-  "versionStatus": "aligned",
-  "releasePrep": "completed",
-  "commit": {
-    "status": "committed",
-    "hash": "9a6d6b0dc2d49730770f12e4fad3c89a77b72560",
-    "message": "docs: add minimal Otto payload checklist"
-  },
-  "push": {
-    "status": "pushed"
-  },
-  "updatedAt": "2026-08-02T00:30:00.000Z",
-  "releaseVersion": "0.2.4",
-  "releaseMetadata": {
-    "channel": "stable",
-    "updateManifest": "manifests/release-0.2.4.json",
-    "latestManifest": "manifests/latest.json"
-  },
-  "validation": {
-    "typescriptNoEmit": "pass"
-  },
-  "syncStage": "docs_payload_baseline_sync",
-  "releaseTag": "v0.2.4",
-  "tags": {
-    "status": "pushed",
-    "name": "v0.2.4"
-  },
-  "releaseLedger": "manifests/gitops-release-ledger-0.2.4.json",
-  "release": {
-    "status": "published",
-    "tag": "v0.2.4",
-    "url": "https://github.com/otto-systems/otto-update/releases/tag/v0.2.4"
-  },
-  "latestSync": {
-    "summary": "README baseline updated with minimal payload checklist and canonical installer references",
-    "date": "2026-08-02T00:30:00.000Z"
-  }
+    "repo":  "otto-update",
+    "syncedAt":  "2026-08-02T22:30:00.000Z",
+    "targetVersion":  "0.2.6",
+    "manifestConsistency":  "validated",
+    "schemaConsistency":  "validated",
+    "versionStatus":  "aligned_local_workspace",
+    "releasePrep":  "completed",
+    "commit":  {
+                   "status":  "committed",
+                   "hash":  "9a6d6b0dc2d49730770f12e4fad3c89a77b72560",
+                   "message":  "docs: add minimal Otto payload checklist"
+               },
+    "push":  {
+                 "status":  "pushed"
+             },
+    "updatedAt":  "2026-08-02T22:30:00.000Z",
+    "releaseVersion":  "0.2.4",
+    "releaseMetadata":  {
+                            "channel":  "stable",
+                            "updateManifest":  "manifests/release-0.2.4.json",
+                            "latestManifest":  "manifests/latest.json"
+                        },
+    "validation":  {
+                       "typescriptNoEmit":  "pass"
+                   },
+    "syncStage":  "tracer_bullet_validation",
+    "releaseTag":  "v0.2.4",
+    "tags":  {
+                 "status":  "pushed",
+                 "name":  "v0.2.4"
+             },
+    "releaseLedger":  "manifests/gitops-release-ledger-0.2.4.json",
+    "release":  {
+                    "status":  "published",
+                    "tag":  "v0.2.4",
+                    "url":  "https://github.com/otto-systems/otto-update/releases/tag/v0.2.4"
+                },
+    "latestSync":  {
+                       "summary":  "Patch bump plus tracer-bullet validation sync",
+                       "date":  "2026-08-02T22:30:00.000Z"
+                   }
 }
