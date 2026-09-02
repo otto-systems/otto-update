@@ -18,6 +18,583 @@ export type GeneratedCommandSchema = {
 
 export const generatedCommandSchemas: GeneratedCommandSchema[] = [
   {
+    "name": "assignments.import",
+    "description": "Import assignments from FACTS CSV.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "AssignmentsImportError"
+    ],
+    "permissions": [
+      "assignments:read"
+    ],
+    "routing": {
+      "handlerModule": "assignmentsImport.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/assignments/import"
+      },
+      "cli": {
+        "group": "assignments",
+        "command": "import"
+      },
+      "operationId": "assignmentsImport"
+    }
+  },
+  {
+    "name": "auth.get.token",
+    "description": "Get authentication token for a specific provider. Returns null if no session is active.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "Optional provider ID. If omitted, returns token for the default provider."
+        }
+      }
+    },
+    "returnType": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "providerId": {
+          "type": "string"
+        },
+        "issuedAt": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorTypes": [
+      "AuthProviderError",
+      "AuthSessionError"
+    ],
+    "permissions": [
+      "auth:read"
+    ],
+    "routing": {
+      "handlerModule": "authGetToken.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/auth/token"
+      },
+      "cli": {
+        "group": "auth",
+        "command": "get-token"
+      },
+      "operationId": "authGetToken"
+    }
+  },
+  {
+    "name": "auth.get.user",
+    "description": "Get user information for a specific provider. Returns null if no user is authenticated.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "Optional provider ID. If omitted, returns user info for the default provider."
+        }
+      }
+    },
+    "returnType": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "providerId": {
+          "type": "string"
+        },
+        "claims": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorTypes": [
+      "AuthProviderError",
+      "AuthSessionError"
+    ],
+    "permissions": [
+      "auth:read"
+    ],
+    "routing": {
+      "handlerModule": "authGetUser.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/auth/user"
+      },
+      "cli": {
+        "group": "auth",
+        "command": "get-user"
+      },
+      "operationId": "authGetUser"
+    }
+  },
+  {
+    "name": "auth.refresh",
+    "description": "Refresh authentication session for a specific provider.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "Optional provider ID. If omitted, refreshes the default provider."
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "properties": {
+        "providerId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "idle",
+            "authenticated",
+            "logged-out",
+            "placeholder"
+          ]
+        },
+        "user": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "token": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorTypes": [
+      "AuthProviderError",
+      "AuthRefreshError"
+    ],
+    "permissions": [
+      "auth:write"
+    ],
+    "routing": {
+      "handlerModule": "authRefresh.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/auth/refresh"
+      },
+      "cli": {
+        "group": "auth",
+        "command": "refresh"
+      },
+      "operationId": "authRefresh"
+    }
+  },
+  {
+    "name": "calendar.get.provider.config",
+    "description": "Get configuration and authentication status for calendar providers.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "Optional provider ID. If omitted, returns config for all providers."
+        }
+      }
+    },
+    "returnType": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isConfigured": {
+            "type": "boolean"
+          },
+          "isAuthenticated": {
+            "type": "boolean"
+          },
+          "lastSyncAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "errorTypes": [
+      "CalendarConfigError"
+    ],
+    "permissions": [
+      "calendar:read"
+    ],
+    "routing": {
+      "handlerModule": "calendarGetProviderConfig.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/calendar/providers"
+      },
+      "cli": {
+        "group": "calendar",
+        "command": "get-providers"
+      },
+      "operationId": "calendarGetProviderConfig"
+    }
+  },
+  {
+    "name": "calendar.list.events",
+    "description": "Retrieve normalized calendar events from configured providers for a date range.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "startDate",
+        "endDate"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "Optional provider ID (microsoft or google). Defaults to microsoft if omitted."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "ISO 8601 date (YYYY-MM-DD) for query start."
+        },
+        "endDate": {
+          "type": "string",
+          "description": "ISO 8601 date (YYYY-MM-DD) for query end."
+        },
+        "includeRaw": {
+          "type": "boolean",
+          "description": "Include raw provider API response in event details (for debugging)."
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "totalCount": {
+          "type": "number"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "requestedRange": {
+          "type": "object"
+        },
+        "generatedAt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorTypes": [
+      "CalendarProviderError",
+      "CalendarAuthError",
+      "CalendarAPIError"
+    ],
+    "permissions": [
+      "calendar:read"
+    ],
+    "routing": {
+      "handlerModule": "calendarListEvents.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/calendar/events"
+      },
+      "cli": {
+        "group": "calendar",
+        "command": "list-events"
+      },
+      "operationId": "calendarListEvents"
+    }
+  },
+  {
+    "name": "calendar.refresh",
+    "description": "Refresh normalized calendar feed.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "CalendarRefreshError"
+    ],
+    "permissions": [
+      "calendar:read"
+    ],
+    "routing": {
+      "handlerModule": "calendarRefresh.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/calendar/refresh"
+      },
+      "cli": {
+        "group": "calendar",
+        "command": "refresh"
+      },
+      "operationId": "calendarRefresh"
+    }
+  },
+  {
+    "name": "calendar.set.provider.config",
+    "description": "Save OAuth credentials for a calendar provider (Microsoft, Google, etc).",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "providerId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "enum": [
+            "microsoft",
+            "google"
+          ],
+          "description": "Provider ID (microsoft or google)"
+        },
+        "clientId": {
+          "type": "string",
+          "description": "OAuth 2.0 Client ID"
+        },
+        "clientSecret": {
+          "type": "string",
+          "description": "OAuth 2.0 Client Secret"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "properties": {
+        "providerId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isConfigured": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "CalendarConfigError",
+      "ValidationError"
+    ],
+    "permissions": [
+      "calendar:write"
+    ],
+    "routing": {
+      "handlerModule": "calendarSetProviderConfig.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/calendar/providers"
+      },
+      "cli": {
+        "group": "calendar",
+        "command": "set-provider"
+      },
+      "operationId": "calendarSetProviderConfig"
+    }
+  },
+  {
+    "name": "calendar.sync",
+    "description": "Trigger synchronization of calendar events from configured providers.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "Optional provider ID (microsoft or google). If omitted, syncs all configured providers."
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "providerId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "success",
+                  "failed",
+                  "skipped"
+                ]
+              },
+              "eventCount": {
+                "type": "number"
+              },
+              "error": {
+                "type": "string"
+              },
+              "syncedAt": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "totalEventCount": {
+          "type": "number"
+        },
+        "generatedAt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorTypes": [
+      "CalendarSyncError",
+      "CalendarAuthError"
+    ],
+    "permissions": [
+      "calendar:write"
+    ],
+    "routing": {
+      "handlerModule": "calendarSync.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/calendar/sync"
+      },
+      "cli": {
+        "group": "calendar",
+        "command": "sync"
+      },
+      "operationId": "calendarSync"
+    }
+  },
+  {
     "name": "config.set",
     "description": "Mutate OttoUpdate server configuration.",
     "parameters": {
@@ -147,6 +724,1009 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "show"
       },
       "operationId": "configShow"
+    }
+  },
+  {
+    "name": "debug.report.last-run",
+    "description": "Return the last recorded debug run summary.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "generatedAt",
+        "summary",
+        "lastRun"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "generatedAt": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "lastRun": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "errorTypes": [
+      "ReportReadError"
+    ],
+    "permissions": [
+      "debug:read"
+    ],
+    "routing": {
+      "handlerModule": "debugReportLastRun.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/debug/report-last-run"
+      },
+      "cli": {
+        "group": "debug",
+        "command": "last"
+      },
+      "operationId": "debugReportLastRun"
+    }
+  },
+  {
+    "name": "debug.snapshot.system",
+    "description": "Capture a runtime snapshot for debugging and support handoff.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "includeMemory": {
+          "type": "boolean"
+        },
+        "includeEnv": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "SnapshotError"
+    ],
+    "permissions": [
+      "debug:read"
+    ],
+    "routing": {
+      "handlerModule": "debugSnapshotSystem.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/debug/snapshot-system"
+      },
+      "cli": {
+        "group": "debug",
+        "command": "snapshot"
+      },
+      "operationId": "debugSnapshotSystem"
+    }
+  },
+  {
+    "name": "debug.trace.api",
+    "description": "Record API trace metadata for command-service-routed external calls.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "method",
+        "route"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "route": {
+          "type": "string"
+        },
+        "statusCode": {
+          "type": "number"
+        },
+        "details": {
+          "type": "string"
+        },
+        "verbose": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "ok",
+        "summary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "TraceWriteError"
+    ],
+    "permissions": [
+      "debug:write"
+    ],
+    "routing": {
+      "handlerModule": "debugTraceApi.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/debug/trace-api"
+      },
+      "cli": {
+        "group": "debug",
+        "command": "trace-api"
+      },
+      "operationId": "debugTraceApi"
+    }
+  },
+  {
+    "name": "debug.trace.command",
+    "description": "Record command execution trace metadata for user-facing debugging.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "command"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "command": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "details": {
+          "type": "string"
+        },
+        "verbose": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "ok",
+        "summary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "TraceWriteError"
+    ],
+    "permissions": [
+      "debug:write"
+    ],
+    "routing": {
+      "handlerModule": "debugTraceCommand.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/debug/trace-command"
+      },
+      "cli": {
+        "group": "debug",
+        "command": "trace-command"
+      },
+      "operationId": "debugTraceCommand"
+    }
+  },
+  {
+    "name": "display.current",
+    "description": "Compute current display payload for a role.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "InvalidRoleError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "displayCurrent.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/display/current"
+      },
+      "cli": {
+        "group": "display",
+        "command": "current"
+      },
+      "operationId": "displayCurrent"
+    }
+  },
+  {
+    "name": "eds.get.extension",
+    "description": "Get a specific extension from the local EDS registry by name.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "workspaceRoot": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "EdsExtensionLookupError"
+    ],
+    "permissions": [
+      "eds:read"
+    ],
+    "routing": {
+      "handlerModule": "edsGetExtension.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/eds/extension/:name"
+      },
+      "cli": {
+        "group": "eds",
+        "command": "extension"
+      },
+      "operationId": "edsGetExtension"
+    }
+  },
+  {
+    "name": "eds.get.extension.<name>",
+    "description": "Template command contract for extension-specific lookup aliases.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "workspaceRoot": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "EdsExtensionLookupError"
+    ],
+    "permissions": [
+      "eds:read"
+    ],
+    "routing": {
+      "handlerModule": "edsGetExtension.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/eds/extension/:name"
+      },
+      "cli": {
+        "group": "eds",
+        "command": "extension-template"
+      },
+      "operationId": "edsGetExtensionTemplate"
+    }
+  },
+  {
+    "name": "eds.get.registry",
+    "description": "Get the local runtime extension registry generated by EDS.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "workspaceRoot": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "EdsRegistryError"
+    ],
+    "permissions": [
+      "eds:read"
+    ],
+    "routing": {
+      "handlerModule": "edsGetRegistry.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/eds/registry"
+      },
+      "cli": {
+        "group": "eds",
+        "command": "registry"
+      },
+      "operationId": "edsGetRegistry"
+    }
+  },
+  {
+    "name": "eds.scan",
+    "description": "Scan local workspace extension roots and rebuild runtime extension registry.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "workspaceRoot": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "EdsScanError"
+    ],
+    "permissions": [
+      "eds:read"
+    ],
+    "routing": {
+      "handlerModule": "edsScan.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/eds/scan"
+      },
+      "cli": {
+        "group": "eds",
+        "command": "scan"
+      },
+      "operationId": "edsScan"
+    }
+  },
+  {
+    "name": "file.check.space",
+    "description": "Check available disk space before install, update, or logging workflows.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "targetPath",
+        "minBytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "targetPath": {
+          "type": "string"
+        },
+        "minBytes": {
+          "type": "number"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "ok",
+        "targetPath",
+        "minBytes",
+        "availableBytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "targetPath": {
+          "type": "string"
+        },
+        "minBytes": {
+          "type": "number"
+        },
+        "availableBytes": {
+          "type": "number"
+        }
+      }
+    },
+    "errorTypes": [
+      "StorageCheckError"
+    ],
+    "permissions": [
+      "file:read"
+    ],
+    "routing": {
+      "handlerModule": "fileCheckSpace.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/check-space"
+      },
+      "cli": {
+        "group": "file",
+        "command": "check-space"
+      },
+      "operationId": "fileCheckSpace"
+    }
+  },
+  {
+    "name": "file.delete",
+    "description": "Delete a managed file or directory path.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "recursive": {
+          "type": "boolean"
+        },
+        "force": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "ok",
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "FileDeleteError"
+    ],
+    "permissions": [
+      "file:write"
+    ],
+    "routing": {
+      "handlerModule": "fileDelete.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/delete"
+      },
+      "cli": {
+        "group": "file",
+        "command": "delete"
+      },
+      "operationId": "fileDelete"
+    }
+  },
+  {
+    "name": "file.delete.path",
+    "description": "Safely delete a managed file or directory path.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "targetPath"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "targetPath": {
+          "type": "string"
+        },
+        "recursive": {
+          "type": "boolean"
+        },
+        "force": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "ok",
+        "deletedPath"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "deletedPath": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "PathDeleteError"
+    ],
+    "permissions": [
+      "file:write"
+    ],
+    "routing": {
+      "handlerModule": "fileDeletePath.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/delete-path"
+      },
+      "cli": {
+        "group": "file",
+        "command": "delete-path"
+      },
+      "operationId": "fileDeletePath"
+    }
+  },
+  {
+    "name": "file.get.install.info",
+    "description": "Get install footprint details for a specific install id.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "RegistryReadError"
+    ],
+    "permissions": [
+      "file:read"
+    ],
+    "routing": {
+      "handlerModule": "fileGetInstallInfo.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/file/get-install-info"
+      },
+      "cli": {
+        "group": "file",
+        "command": "get-install-info"
+      },
+      "operationId": "fileGetInstallInfo"
+    }
+  },
+  {
+    "name": "file.list.installs",
+    "description": "List tracked install footprint entries.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "registryPath",
+        "installs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "registryPath": {
+          "type": "string"
+        },
+        "installs": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "errorTypes": [
+      "RegistryReadError"
+    ],
+    "permissions": [
+      "file:read"
+    ],
+    "routing": {
+      "handlerModule": "fileListInstalls.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/file/list-installs"
+      },
+      "cli": {
+        "group": "file",
+        "command": "list-installs"
+      },
+      "operationId": "fileListInstalls"
+    }
+  },
+  {
+    "name": "file.list",
+    "description": "List files and directories at a managed workspace path.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "path",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "file",
+                  "directory"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "errorTypes": [
+      "FileListError"
+    ],
+    "permissions": [
+      "file:read"
+    ],
+    "routing": {
+      "handlerModule": "fileList.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/list"
+      },
+      "cli": {
+        "group": "file",
+        "command": "list"
+      },
+      "operationId": "fileList"
+    }
+  },
+  {
+    "name": "file.read",
+    "description": "Read a UTF-8 text file from a managed workspace path.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "path",
+        "content"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "FileReadError"
+    ],
+    "permissions": [
+      "file:read"
+    ],
+    "routing": {
+      "handlerModule": "fileRead.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/read"
+      },
+      "cli": {
+        "group": "file",
+        "command": "read"
+      },
+      "operationId": "fileRead"
+    }
+  },
+  {
+    "name": "file.rotate.logs",
+    "description": "Rotate and prune log files for debug and logging extensions.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "directory",
+        "maxFiles",
+        "maxBytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "directory": {
+          "type": "string"
+        },
+        "maxFiles": {
+          "type": "number"
+        },
+        "maxBytes": {
+          "type": "number"
+        },
+        "activeLogFile": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "directory",
+        "rotated",
+        "removed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "directory": {
+          "type": "string"
+        },
+        "rotated": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "removed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "errorTypes": [
+      "LogRotationError"
+    ],
+    "permissions": [
+      "file:write"
+    ],
+    "routing": {
+      "handlerModule": "fileRotateLogs.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/rotate-logs"
+      },
+      "cli": {
+        "group": "file",
+        "command": "rotate-logs"
+      },
+      "operationId": "fileRotateLogs"
+    }
+  },
+  {
+    "name": "file.write",
+    "description": "Write UTF-8 content to a managed workspace path.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "path",
+        "content"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "ok",
+        "path",
+        "bytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string"
+        },
+        "bytes": {
+          "type": "number"
+        }
+      }
+    },
+    "errorTypes": [
+      "FileWriteError"
+    ],
+    "permissions": [
+      "file:write"
+    ],
+    "routing": {
+      "handlerModule": "fileWrite.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/file/write"
+      },
+      "cli": {
+        "group": "file",
+        "command": "write"
+      },
+      "operationId": "fileWrite"
     }
   },
   {
@@ -334,6 +1914,1023 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "update"
       },
       "operationId": "maestroUpdate"
+    }
+  },
+  {
+    "id": "oauth.exchange.token",
+    "name": "OAuth Token Exchange",
+    "description": "Exchange authorization code for access token (Microsoft, Google)",
+    "category": "auth",
+    "tags": [
+      "oauth",
+      "token",
+      "microsoft",
+      "google"
+    ],
+    "handler": "oauthExchangeToken",
+    "input": {
+      "type": "object",
+      "properties": {
+        "providerId": {
+          "type": "string",
+          "description": "OAuth provider (microsoft or google)",
+          "enum": [
+            "microsoft",
+            "google"
+          ]
+        },
+        "clientId": {
+          "type": "string",
+          "description": "OAuth application client ID"
+        },
+        "clientSecret": {
+          "type": "string",
+          "description": "OAuth application client secret (NOT logged)"
+        },
+        "authorizationCode": {
+          "type": "string",
+          "description": "Authorization code from OAuth redirect"
+        },
+        "redirectUri": {
+          "type": "string",
+          "description": "Redirect URI used in OAuth flow"
+        }
+      },
+      "required": [
+        "providerId",
+        "clientId",
+        "clientSecret",
+        "authorizationCode",
+        "redirectUri"
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "providerId": {
+          "type": "string"
+        },
+        "token": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "Access token (NOT logged)"
+            },
+            "expiresAt": {
+              "type": "string"
+            },
+            "issuedAt": {
+              "type": "string"
+            }
+          }
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "orchestrator.displays.add",
+    "description": "Add a display id to registry and initialize playlist files.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "displayId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorDisplaysError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorDisplaysAdd.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/displays/add"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "displays-add"
+      },
+      "operationId": "orchestratorDisplaysAdd"
+    }
+  },
+  {
+    "name": "orchestrator.displays.delete",
+    "description": "Soft-delete a display id from active registry.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "displayId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorDisplaysError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorDisplaysDelete.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/displays/delete"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "displays-delete"
+      },
+      "operationId": "orchestratorDisplaysDelete"
+    }
+  },
+  {
+    "name": "orchestrator.displays.list",
+    "description": "List active and soft-deleted display ids.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorDisplaysError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorDisplaysList.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/displays/list"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "displays-list"
+      },
+      "operationId": "orchestratorDisplaysList"
+    }
+  },
+  {
+    "name": "orchestrator.displays.sharePlaylist",
+    "description": "Copy playlist settings/pages/tier list from one display id to another.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "targetDisplayId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "sourceDisplayId": {
+          "type": "string"
+        },
+        "targetDisplayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorDisplaysError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorDisplaysSharePlaylist.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/displays/share-playlist"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "displays-share-playlist"
+      },
+      "operationId": "orchestratorDisplaysSharePlaylist"
+    }
+  },
+  {
+    "name": "orchestrator.page.restore",
+    "description": "Restore a soft deleted page for a display.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "pageId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        },
+        "pageId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPageRestoreError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPageRestore.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/page/restore"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "page-restore"
+      },
+      "operationId": "orchestratorPageRestore"
+    }
+  },
+  {
+    "name": "orchestrator.page.softDelete",
+    "description": "Soft delete a page for a display.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "pageId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        },
+        "pageId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPageDeleteError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPageSoftDelete.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/page/soft-delete"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "page-soft-delete"
+      },
+      "operationId": "orchestratorPageSoftDelete"
+    }
+  },
+  {
+    "name": "orchestrator.pageSettings.get",
+    "description": "Get per-page orchestrator settings for a page id.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "pageId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pageId": {
+          "type": "string"
+        },
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPageSettingsError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPageSettingsGet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/page-settings/get"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "page-settings-get"
+      },
+      "operationId": "orchestratorPageSettingsGet"
+    }
+  },
+  {
+    "name": "orchestrator.pageSettings.list",
+    "description": "List per-page orchestrator settings.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        },
+        "includeDeleted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "errorTypes": [
+      "OrchestratorPageSettingsError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPageSettingsList.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/page-settings/list"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "page-settings-list"
+      },
+      "operationId": "orchestratorPageSettingsList"
+    }
+  },
+  {
+    "name": "orchestrator.pageSettings.set",
+    "description": "Update per-page orchestrator settings for a page id.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "pageId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "pageId": {
+          "type": "string"
+        },
+        "displayId": {
+          "type": "string"
+        },
+        "patch": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPageSettingsError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPageSettingsSet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/page-settings/set"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "page-settings-set"
+      },
+      "operationId": "orchestratorPageSettingsSet"
+    }
+  },
+  {
+    "name": "orchestrator.pages.add",
+    "description": "Add a persisted orchestrator page (url or inline-code).",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "url",
+            "inline-code",
+            "time",
+            "weather",
+            "custom",
+            "emergency"
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "pageId": {
+          "type": "string"
+        },
+        "displayId": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "number"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPagesError"
+    ],
+    "permissions": [
+      "display:write",
+      "file:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPagesAdd.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/pages/add"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "pages-add"
+      },
+      "operationId": "orchestratorPagesAdd"
+    }
+  },
+  {
+    "name": "orchestrator.pages.download-all",
+    "description": "Create a backup archive payload for all persisted orchestrator pages.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPagesError"
+    ],
+    "permissions": [
+      "display:read",
+      "file:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPagesDownloadAll.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/pages/download-all"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "pages-download-all"
+      },
+      "operationId": "orchestratorPagesDownloadAll"
+    }
+  },
+  {
+    "name": "orchestrator.pages.list",
+    "description": "List persisted orchestrator pages.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorPagesError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorPagesList.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/pages/list"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "pages-list"
+      },
+      "operationId": "orchestratorPagesList"
+    }
+  },
+  {
+    "name": "orchestrator.rotation.plan.get",
+    "description": "Build current rotation plan using persisted orchestrator settings.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorRotationPlanError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorRotationPlanGet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/rotation/plan/get"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "rotation-plan-get"
+      },
+      "operationId": "orchestratorRotationPlanGet"
+    }
+  },
+  {
+    "name": "orchestrator.settings.download",
+    "description": "Download orchestrator settings and pages snapshot.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorSettingsError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorSettingsDownload.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/settings/download"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "settings-download"
+      },
+      "operationId": "orchestratorSettingsDownload"
+    }
+  },
+  {
+    "name": "orchestrator.settings.get",
+    "description": "Get current display orchestrator settings.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorSettingsError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorSettingsGet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/settings/get"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "settings-get"
+      },
+      "operationId": "orchestratorSettingsGet"
+    }
+  },
+  {
+    "name": "orchestrator.settings.list",
+    "description": "List available display orchestrator settings snapshots.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "errorTypes": [
+      "OrchestratorSettingsError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorSettingsList.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/settings/list"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "settings-list"
+      },
+      "operationId": "orchestratorSettingsList"
+    }
+  },
+  {
+    "name": "orchestrator.settings.restore",
+    "description": "Restore orchestrator settings and pages from a provided payload.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "settings"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "settings": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorSettingsRestoreError"
+    ],
+    "permissions": [
+      "display:write",
+      "file:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorSettingsRestore.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/settings/restore"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "settings-restore"
+      },
+      "operationId": "orchestratorSettingsRestore"
+    }
+  },
+  {
+    "name": "orchestrator.settings.set",
+    "description": "Update display orchestrator settings.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        },
+        "patch": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorSettingsError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorSettingsSet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/settings/set"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "settings-set"
+      },
+      "operationId": "orchestratorSettingsSet"
+    }
+  },
+  {
+    "name": "orchestrator.tierList.get",
+    "description": "Get ordered tier list for a display.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorTierListError"
+    ],
+    "permissions": [
+      "display:read"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorTierListGet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/orchestrator/tier-list/get"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "tier-list-get"
+      },
+      "operationId": "orchestratorTierListGet"
+    }
+  },
+  {
+    "name": "orchestrator.tierList.set",
+    "description": "Update ordered tier list for a display.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "displayId": {
+          "type": "string"
+        },
+        "patch": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "tierList": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "addTier": {
+          "type": "number"
+        },
+        "deleteTier": {
+          "type": "number"
+        },
+        "moveTier": {
+          "type": "number"
+        },
+        "toIndex": {
+          "type": "number"
+        },
+        "fallbackTier": {
+          "type": "number"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "OrchestratorTierListError"
+    ],
+    "permissions": [
+      "display:write"
+    ],
+    "routing": {
+      "handlerModule": "orchestratorTierListSet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/orchestrator/tier-list/set"
+      },
+      "cli": {
+        "group": "orchestrator",
+        "command": "tier-list-set"
+      },
+      "operationId": "orchestratorTierListSet"
     }
   },
   {
@@ -584,6 +3181,518 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "uninstall"
       },
       "operationId": "serviceUninstall"
+    }
+  },
+  {
+    "name": "update.approve",
+    "description": "Approve a pending OttoUpdate check.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "check_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateApproveError"
+    ],
+    "permissions": [
+      "update:manage"
+    ],
+    "routing": {
+      "handlerModule": "updateApprove.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/update/approve"
+      },
+      "cli": {
+        "group": "update",
+        "command": "approve"
+      },
+      "operationId": "updateApprove"
+    }
+  },
+  {
+    "name": "update.backups",
+    "description": "List OttoUpdate backup records.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateBackupsError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateBackups.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/backups"
+      },
+      "cli": {
+        "group": "update",
+        "command": "backups"
+      },
+      "operationId": "updateBackups"
+    }
+  },
+  {
+    "name": "update.check",
+    "description": "Trigger an OttoUpdate check cycle.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateCheckError"
+    ],
+    "permissions": [
+      "update:manage"
+    ],
+    "routing": {
+      "handlerModule": "updateCheck.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/update/check"
+      },
+      "cli": {
+        "group": "update",
+        "command": "check"
+      },
+      "operationId": "updateCheck"
+    }
+  },
+  {
+    "name": "update.config.get",
+    "description": "Read OttoUpdate runtime configuration.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateConfigReadError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateConfigGet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/config"
+      },
+      "cli": {
+        "group": "update",
+        "command": "config-get"
+      },
+      "operationId": "updateConfigGet"
+    }
+  },
+  {
+    "name": "update.config.set",
+    "description": "Patch OttoUpdate runtime configuration.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateConfigWriteError"
+    ],
+    "permissions": [
+      "update:manage"
+    ],
+    "routing": {
+      "handlerModule": "updateConfigSet.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "PUT",
+        "path": "/v1/commands/update/config"
+      },
+      "cli": {
+        "group": "update",
+        "command": "config-set"
+      },
+      "operationId": "updateConfigSet"
+    }
+  },
+  {
+    "name": "update.defer",
+    "description": "Defer a pending OttoUpdate check.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "check_id",
+        "defer_seconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "type": "string"
+        },
+        "defer_seconds": {
+          "type": "number",
+          "minimum": 1
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateDeferError"
+    ],
+    "permissions": [
+      "update:manage"
+    ],
+    "routing": {
+      "handlerModule": "updateDefer.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/update/defer"
+      },
+      "cli": {
+        "group": "update",
+        "command": "defer"
+      },
+      "operationId": "updateDefer"
+    }
+  },
+  {
+    "name": "update.health",
+    "description": "Read OttoUpdate health status.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateHealthError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateHealth.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/health"
+      },
+      "cli": {
+        "group": "update",
+        "command": "health"
+      },
+      "operationId": "updateHealth"
+    }
+  },
+  {
+    "name": "update.history",
+    "description": "Read OttoUpdate history entries.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "limit": {
+          "type": "number",
+          "default": 50,
+          "minimum": 1
+        },
+        "offset": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateHistoryError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateHistory.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/history"
+      },
+      "cli": {
+        "group": "update",
+        "command": "history"
+      },
+      "operationId": "updateHistory"
+    }
+  },
+  {
+    "name": "update.manifest",
+    "description": "Read current OttoUpdate manifest.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateManifestError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateManifest.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/manifest"
+      },
+      "cli": {
+        "group": "update",
+        "command": "manifest"
+      },
+      "operationId": "updateManifest"
+    }
+  },
+  {
+    "name": "update.policy",
+    "description": "Read OttoUpdate policy decision.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdatePolicyError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updatePolicy.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/policy"
+      },
+      "cli": {
+        "group": "update",
+        "command": "policy"
+      },
+      "operationId": "updatePolicy"
+    }
+  },
+  {
+    "name": "update.progress",
+    "description": "Read OttoUpdate progress data.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateProgressError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateProgress.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/progress"
+      },
+      "cli": {
+        "group": "update",
+        "command": "progress"
+      },
+      "operationId": "updateProgress"
+    }
+  },
+  {
+    "name": "update.rollback",
+    "description": "Trigger OttoUpdate rollback.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateRollbackError"
+    ],
+    "permissions": [
+      "update:manage"
+    ],
+    "routing": {
+      "handlerModule": "updateRollback.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/update/rollback"
+      },
+      "cli": {
+        "group": "update",
+        "command": "rollback"
+      },
+      "operationId": "updateRollback"
+    }
+  },
+  {
+    "name": "update.state",
+    "description": "Read OttoUpdate state payload.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateStateError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateState.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "GET",
+        "path": "/v1/commands/update/state"
+      },
+      "cli": {
+        "group": "update",
+        "command": "state"
+      },
+      "operationId": "updateState"
     }
   }
 ] as GeneratedCommandSchema[];
