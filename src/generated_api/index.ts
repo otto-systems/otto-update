@@ -727,6 +727,303 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
     }
   },
   {
+    "name": "data.pack",
+    "description": "Package and compress UTF-8 payload content for transfer.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "codec": {
+          "type": "string",
+          "enum": [
+            "none",
+            "gzip",
+            "brotli"
+          ]
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "encoded",
+        "codec",
+        "encoding",
+        "originalBytes",
+        "packagedBytes",
+        "compressionRatio"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "encoded": {
+          "type": "string"
+        },
+        "codec": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "originalBytes": {
+          "type": "number"
+        },
+        "packagedBytes": {
+          "type": "number"
+        },
+        "compressionRatio": {
+          "type": "number"
+        }
+      }
+    },
+    "errorTypes": [
+      "DataPackError"
+    ],
+    "permissions": [
+      "data:write"
+    ],
+    "routing": {
+      "handlerModule": "dataPack.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/data/pack"
+      },
+      "cli": {
+        "group": "data",
+        "command": "pack"
+      },
+      "operationId": "dataPack"
+    }
+  },
+  {
+    "name": "data.records.export",
+    "description": "Export records into deterministic JSON or JSONL payload text.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "records"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "json",
+            "jsonl"
+          ]
+        },
+        "pretty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "body",
+        "format",
+        "count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number"
+        }
+      }
+    },
+    "errorTypes": [
+      "DataRecordsExportError"
+    ],
+    "permissions": [
+      "data:write"
+    ],
+    "routing": {
+      "handlerModule": "dataRecordsExport.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/data/records/export"
+      },
+      "cli": {
+        "group": "data",
+        "command": "records-export"
+      },
+      "operationId": "dataRecordsExport"
+    }
+  },
+  {
+    "name": "data.records.import",
+    "description": "Import records from deterministic JSON or JSONL payload text.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "json",
+            "jsonl"
+          ]
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "records",
+        "format",
+        "count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "format": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number"
+        }
+      }
+    },
+    "errorTypes": [
+      "DataRecordsImportError"
+    ],
+    "permissions": [
+      "data:read"
+    ],
+    "routing": {
+      "handlerModule": "dataRecordsImport.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/data/records/import"
+      },
+      "cli": {
+        "group": "data",
+        "command": "records-import"
+      },
+      "operationId": "dataRecordsImport"
+    }
+  },
+  {
+    "name": "data.unpack",
+    "description": "Decode and decompress a packaged payload.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "encoded"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "encoded": {
+          "type": "string"
+        },
+        "codec": {
+          "type": "string",
+          "enum": [
+            "none",
+            "gzip",
+            "brotli"
+          ]
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "required": [
+        "content",
+        "codec",
+        "encoding",
+        "packagedBytes",
+        "unpackedBytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "codec": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "packagedBytes": {
+          "type": "number"
+        },
+        "unpackedBytes": {
+          "type": "number"
+        }
+      }
+    },
+    "errorTypes": [
+      "DataUnpackError"
+    ],
+    "permissions": [
+      "data:read"
+    ],
+    "routing": {
+      "handlerModule": "dataUnpack.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/data/unpack"
+      },
+      "cli": {
+        "group": "data",
+        "command": "unpack"
+      },
+      "operationId": "dataUnpack"
+    }
+  },
+  {
     "name": "debug.report.last-run",
     "description": "Return the last recorded debug run summary.",
     "parameters": {
