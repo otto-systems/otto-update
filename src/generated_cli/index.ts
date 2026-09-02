@@ -3,10 +3,13 @@
 
 import { executeGeneratedCommand } from "../generated_api/index.js";
 
-export type GeneratedCliCommandName = "assignments.import" | "auth.get.token" | "auth.get.user" | "auth.refresh" | "calendar.get.provider.config" | "calendar.list.events" | "calendar.refresh" | "calendar.set.provider.config" | "calendar.sync" | "config.set" | "config.show" | "data.pack" | "data.records.export" | "data.records.import" | "data.unpack" | "debug.report.last-run" | "debug.snapshot.system" | "debug.trace.api" | "debug.trace.command" | "display.current" | "eds.get.extension" | "eds.get.extension.<name>" | "eds.get.registry" | "eds.scan" | "file.check.space" | "file.delete" | "file.delete.path" | "file.get.install.info" | "file.list.installs" | "file.list" | "file.read" | "file.rotate.logs" | "file.write" | "maestro.install" | "maestro.repair" | "maestro.uninstall" | "maestro.update" | "OAuth Token Exchange" | "orchestrator.displays.add" | "orchestrator.displays.delete" | "orchestrator.displays.list" | "orchestrator.displays.sharePlaylist" | "orchestrator.page.restore" | "orchestrator.page.softDelete" | "orchestrator.pageSettings.get" | "orchestrator.pageSettings.list" | "orchestrator.pageSettings.set" | "orchestrator.pages.add" | "orchestrator.pages.download-all" | "orchestrator.pages.list" | "orchestrator.rotation.plan.get" | "orchestrator.settings.download" | "orchestrator.settings.get" | "orchestrator.settings.list" | "orchestrator.settings.restore" | "orchestrator.settings.set" | "orchestrator.tierList.get" | "orchestrator.tierList.set" | "schedule.calculate.phase" | "schedule.get.current" | "schedule.list.periods" | "service.install" | "service.start" | "service.status" | "service.stop" | "service.uninstall" | "update.approve" | "update.backups" | "update.check" | "update.config.get" | "update.config.set" | "update.defer" | "update.health" | "update.history" | "update.manifest" | "update.policy" | "update.progress" | "update.rollback" | "update.state";
+export type GeneratedCliCommandName = "assignments.get.by-id" | "assignments.import" | "assignments.list" | "assignments.refresh" | "auth.get.token" | "auth.get.user" | "auth.refresh" | "calendar.get.provider.config" | "calendar.list.events" | "calendar.refresh" | "calendar.set.provider.config" | "calendar.sync" | "config.set" | "config.show" | "data.pack" | "data.records.export" | "data.records.import" | "data.unpack" | "debug.report.last-run" | "debug.snapshot.system" | "debug.trace.api" | "debug.trace.command" | "display.current" | "eds.get.extension" | "eds.get.extension.<name>" | "eds.get.registry" | "eds.scan" | "file.check.space" | "file.delete" | "file.delete.path" | "file.get.install.info" | "file.list.installs" | "file.list" | "file.read" | "file.rotate.logs" | "file.write" | "gateway.import.facts" | "gateway.pisignage.push" | "gateway.sync.all" | "maestro.install" | "maestro.repair" | "maestro.uninstall" | "maestro.update" | "OAuth Token Exchange" | "orchestrator.displays.add" | "orchestrator.displays.delete" | "orchestrator.displays.list" | "orchestrator.displays.sharePlaylist" | "orchestrator.page.restore" | "orchestrator.page.softDelete" | "orchestrator.pageSettings.get" | "orchestrator.pageSettings.list" | "orchestrator.pageSettings.set" | "orchestrator.pages.add" | "orchestrator.pages.download-all" | "orchestrator.pages.list" | "orchestrator.rotation.plan.get" | "orchestrator.settings.download" | "orchestrator.settings.get" | "orchestrator.settings.list" | "orchestrator.settings.restore" | "orchestrator.settings.set" | "orchestrator.tierList.get" | "orchestrator.tierList.set" | "schedule.calculate.phase" | "schedule.get.current" | "schedule.list.periods" | "service.install" | "service.start" | "service.status" | "service.stop" | "service.uninstall" | "update.approve" | "update.backups" | "update.check" | "update.config.get" | "update.config.set" | "update.defer" | "update.health" | "update.history" | "update.manifest" | "update.policy" | "update.progress" | "update.rollback" | "update.state";
 
 export const generatedCliCommands: GeneratedCliCommandName[] = [
+  "assignments.get.by-id",
   "assignments.import",
+  "assignments.list",
+  "assignments.refresh",
   "auth.get.token",
   "auth.get.user",
   "auth.refresh",
@@ -39,6 +42,9 @@ export const generatedCliCommands: GeneratedCliCommandName[] = [
   "file.read",
   "file.rotate.logs",
   "file.write",
+  "gateway.import.facts",
+  "gateway.pisignage.push",
+  "gateway.sync.all",
   "maestro.install",
   "maestro.repair",
   "maestro.uninstall",

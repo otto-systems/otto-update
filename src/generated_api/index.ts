@@ -18,6 +18,56 @@ export type GeneratedCommandSchema = {
 
 export const generatedCommandSchemas: GeneratedCommandSchema[] = [
   {
+    "name": "assignments.get.by-id",
+    "description": "Get a normalized assignment by stable ID.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "assignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "AssignmentsGetByIdError"
+    ],
+    "permissions": [
+      "assignments:read"
+    ],
+    "routing": {
+      "handlerModule": "assignmentsGetById.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/assignments/get-by-id"
+      },
+      "cli": {
+        "group": "assignments",
+        "command": "get-by-id"
+      },
+      "operationId": "assignmentsGetById"
+    }
+  },
+  {
     "name": "assignments.import",
     "description": "Import assignments from FACTS CSV.",
     "parameters": {
@@ -56,6 +106,102 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "import"
       },
       "operationId": "assignmentsImport"
+    }
+  },
+  {
+    "name": "assignments.list",
+    "description": "List normalized assignments with optional limit.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "assignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "limit": {
+          "type": "number"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "AssignmentsListError"
+    ],
+    "permissions": [
+      "assignments:read"
+    ],
+    "routing": {
+      "handlerModule": "assignmentsList.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/assignments/list"
+      },
+      "cli": {
+        "group": "assignments",
+        "command": "list"
+      },
+      "operationId": "assignmentsList"
+    }
+  },
+  {
+    "name": "assignments.refresh",
+    "description": "Refresh and normalize assignments from records or CSV content.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "csv": {
+          "type": "string"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "AssignmentsRefreshError"
+    ],
+    "permissions": [
+      "assignments:write"
+    ],
+    "routing": {
+      "handlerModule": "assignmentsRefresh.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/assignments/refresh"
+      },
+      "cli": {
+        "group": "assignments",
+        "command": "refresh"
+      },
+      "operationId": "assignmentsRefresh"
     }
   },
   {
@@ -2024,6 +2170,149 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "write"
       },
       "operationId": "fileWrite"
+    }
+  },
+  {
+    "name": "gateway.import.facts",
+    "description": "Import FACTS payload content through gateway client abstraction.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "csvContent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "csvContent": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "GatewayImportFactsError"
+    ],
+    "permissions": [
+      "gateway:read"
+    ],
+    "routing": {
+      "handlerModule": "gatewayImportFacts.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/gateway/import-facts"
+      },
+      "cli": {
+        "group": "gateway",
+        "command": "import-facts"
+      },
+      "operationId": "gatewayImportFacts"
+    }
+  },
+  {
+    "name": "gateway.pisignage.push",
+    "description": "Push playlist URL to PiSignage through gateway client abstraction.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "playerId",
+        "playlistUrl"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "playerId": {
+          "type": "string"
+        },
+        "playlistUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "GatewayPiSignagePushError"
+    ],
+    "permissions": [
+      "gateway:write"
+    ],
+    "routing": {
+      "handlerModule": "gatewayPiSignagePush.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/gateway/pisignage-push"
+      },
+      "cli": {
+        "group": "gateway",
+        "command": "pisignage-push"
+      },
+      "operationId": "gatewayPiSignagePush"
+    }
+  },
+  {
+    "name": "gateway.sync.all",
+    "description": "Run unified provider sync orchestration.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "factsCsv": {
+          "type": "string"
+        },
+        "calendarId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "playerId": {
+          "type": "string"
+        },
+        "playlistUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "GatewaySyncAllError"
+    ],
+    "permissions": [
+      "gateway:sync"
+    ],
+    "routing": {
+      "handlerModule": "gatewaySyncAll.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/gateway/sync-all"
+      },
+      "cli": {
+        "group": "gateway",
+        "command": "sync-all"
+      },
+      "operationId": "gatewaySyncAll"
     }
   },
   {
