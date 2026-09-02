@@ -3231,6 +3231,153 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
     }
   },
   {
+    "name": "schedule.calculate.phase",
+    "description": "Calculate schedule phase status for the selected day and timestamp.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "schedule"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schedule": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "dayName": {
+          "type": "string"
+        },
+        "now": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "ScheduleCalculatePhaseError"
+    ],
+    "permissions": [
+      "schedule:read"
+    ],
+    "routing": {
+      "handlerModule": "scheduleCalculatePhase.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/schedule/calculate-phase"
+      },
+      "cli": {
+        "group": "schedule",
+        "command": "calculate-phase"
+      },
+      "operationId": "scheduleCalculatePhase"
+    }
+  },
+  {
+    "name": "schedule.get.current",
+    "description": "Resolve the active and next schedule periods for a day.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "schedule"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schedule": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "dayName": {
+          "type": "string"
+        },
+        "now": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "ScheduleCurrentError"
+    ],
+    "permissions": [
+      "schedule:read"
+    ],
+    "routing": {
+      "handlerModule": "scheduleGetCurrent.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/schedule/current"
+      },
+      "cli": {
+        "group": "schedule",
+        "command": "current"
+      },
+      "operationId": "scheduleGetCurrent"
+    }
+  },
+  {
+    "name": "schedule.list.periods",
+    "description": "List all configured periods for the selected day.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "schedule"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schedule": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "dayName": {
+          "type": "string"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "ScheduleListPeriodsError"
+    ],
+    "permissions": [
+      "schedule:read"
+    ],
+    "routing": {
+      "handlerModule": "scheduleListPeriods.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/schedule/list-periods"
+      },
+      "cli": {
+        "group": "schedule",
+        "command": "list-periods"
+      },
+      "operationId": "scheduleListPeriods"
+    }
+  },
+  {
     "name": "service.install",
     "description": "Install OttoUpdate service.",
     "parameters": {
