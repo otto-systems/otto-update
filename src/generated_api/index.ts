@@ -476,6 +476,60 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
     }
   },
   {
+    "name": "calendar.get.provider.tokens",
+    "description": "Get stored OAuth tokens for calendar providers.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expiresAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "refreshToken": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "errorTypes": [
+      "CalendarTokenError"
+    ],
+    "permissions": [
+      "calendar:read"
+    ],
+    "routing": {
+      "handlerModule": "calendarGetProviderTokens.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli"
+      ],
+      "cli": {
+        "group": "calendar",
+        "command": "get-tokens"
+      },
+      "operationId": "calendarGetProviderTokens"
+    }
+  },
+  {
     "name": "calendar.list.events",
     "description": "Retrieve normalized calendar events from configured providers for a date range.",
     "parameters": {
@@ -659,6 +713,75 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "set-provider"
       },
       "operationId": "calendarSetProviderConfig"
+    }
+  },
+  {
+    "name": "calendar.set.provider.tokens",
+    "description": "Store OAuth tokens for calendar providers.",
+    "parameters": {
+      "type": "object",
+      "required": [
+        "tokens"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tokens": {
+          "type": "object",
+          "description": "Map of provider tokens",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "expiresAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "refreshToken": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "errorTypes": [
+      "CalendarTokenError"
+    ],
+    "permissions": [
+      "calendar:write"
+    ],
+    "routing": {
+      "handlerModule": "calendarSetProviderTokens.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli"
+      ],
+      "cli": {
+        "group": "calendar",
+        "command": "set-tokens"
+      },
+      "operationId": "calendarSetProviderTokens"
     }
   },
   {
@@ -4426,6 +4549,48 @@ export const generatedCommandSchemas: GeneratedCommandSchema[] = [
         "command": "state"
       },
       "operationId": "updateState"
+    }
+  },
+  {
+    "name": "update.validate.install",
+    "description": "Validate install integrity and dependency/version health before update checks.",
+    "parameters": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "strict": {
+          "type": "boolean",
+          "description": "When true (default), throws on validation failures."
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "errorTypes": [
+      "UpdateValidationError"
+    ],
+    "permissions": [
+      "update:read"
+    ],
+    "routing": {
+      "handlerModule": "updateValidateInstall.mjs",
+      "handlerExport": "handle",
+      "exposedAs": [
+        "cli",
+        "api"
+      ],
+      "http": {
+        "method": "POST",
+        "path": "/v1/commands/update/validate-install"
+      },
+      "cli": {
+        "group": "update",
+        "command": "validate-install"
+      },
+      "operationId": "updateValidateInstall"
     }
   }
 ] as GeneratedCommandSchema[];
