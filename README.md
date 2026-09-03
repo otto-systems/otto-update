@@ -2,15 +2,77 @@
 
 OttoUpdate is the update engine for Otto, responsible for update policies, release orchestration, and generated command execution surfaces.
 
+**v0.3.0 — NEW: Self-Healing Framework**
+
+Programs using OttoUpdate can now automatically validate and repair critical artifacts (scripts, configs, etc.) before applying updates, ensuring system health and preventing stale deployments from interfering with upgrades.
+
 ## Current Release Line
 
-- Version: 0.2.5
-- Bugfix focus: package and crate version bump, workflow-first cross-platform installer generation, and cleanup of generated report noise from source control.
+- Version: 0.3.0
+- Major feature: Self-Healing Framework for artifact validation and automatic repair
+- Backward compatible: Existing update workflows unchanged, self-healing is opt-in
 
 ## Responsibilities
 - Resolve and evaluate update manifests.
 - Execute update orchestration through generated command surfaces.
 - Provide generated CLI/API integration points to the rest of the Otto platform.
+- **NEW: Enable programs to validate and repair critical artifacts before updates** (Self-Healing Framework)
+
+## Self-Healing Framework
+
+### Overview
+Any Otto program can now register critical artifacts (shell scripts, configuration files, etc.) for automatic pre-update validation and repair. This prevents issues where deployed systems run stale versions of critical files.
+
+**Example: Auto-Update Script Staleness**
+- Your app ships version N of `/opt/app/auto-update.sh`
+- Version N+1 adds fallback retrieval and environment variable support
+- Deployed system still runs version N (old installer never re-run)
+- Without self-healing: Update fails because script lacks new features
+- With self-healing: Script is auto-detected as stale, repaired with v N+1, update succeeds
+
+### Key Features
+- **Artifact Registration**: Simple API to register files for monitoring
+- **Validation**: Customizable validation logic (check for required functions, configs, etc.)
+- **Automatic Repair**: Regenerate stale artifacts from canonical templates
+- **Pre-Update Integration**: Validates before update starts, blocks if critical issues found
+- **Comprehensive Reporting**: Detailed health checks and repair results
+- **Callback Support**: React to validation failures and repair completions
+
+### Quick Start
+```typescript
+import { SelfHealingRegistry, createPreUpdateValidator } from "@otto/update";
+
+// Register artifacts
+const registry = new SelfHealingRegistry("/opt/my-app");
+registry.register({
+  id: "auto-update-script",
+  name: "Auto-Update Script",
+  path: "../auto-update.sh",
+  validate: (content) => {
+    // Check for required functions
+    const hasFunctions = ["run_command", "read_manifest_version"]
+      .every(fn => content.includes(fn));
+    return { isHealthy: hasFunctions, severity: "error" };
+  },
+  repair: async (options) => {
+    // Regenerate from template
+    const template = await options.readFile("runtime/auto-update.sh.template");
+    await options.writeFile(options.artifactPath, template);
+    return { success: true, repaired: true, severity: "info", reason: "repaired" };
+  },
+  criticalityLevel: "error",
+});
+
+// Validate before update
+const validator = createPreUpdateValidator(registry);
+const result = await validator.validateBeforeUpdate(manifest, autoRepair = true);
+
+if (result.canProceedWithUpdate) {
+  // Safe to proceed - all artifacts healthy
+}
+```
+
+For complete documentation, see [SELF-HEALING.md](docs/SELF-HEALING.md)
 
 ## Command Surface Ownership
 
@@ -25,10 +87,13 @@ The current workspace wiring uses:
 
 ## Structure
 - `src/update/` – update domain logic
+- `src/selfHealing/` – **NEW: Self-healing framework for artifact validation and repair**
 - `src/generated_cli/` – generated CLI command surface
 - `src/generated_api/` – generated API command surface
 - `src/main.ts` – generated surface entrypoint
-- `docs/` – migration and validation reports
+- `docs/` – migration and validation reports, **NEW: SELF-HEALING.md**
+- `examples/` – **NEW: Example integrations (e.g., display-system-integration.ts)**
+- `tests/` – unit tests, **NEW: selfHealing.test.ts**
 
 ## Migration Evidence
 - `docs/workspace-clean-state.md` – workspace cleanup and git-baseline audit
